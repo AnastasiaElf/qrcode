@@ -27,7 +27,7 @@
 
 <body>
 
-    <h2>QR Code Generator with SVG Text as Logo</h2>
+    <h2>QR Code Generator with Multiline SVG Text as Logo</h2>
 
     <label>
         URL to encode:<br>
@@ -35,8 +35,8 @@
     </label><br>
 
     <label>
-        Text to embed as logo:<br>
-        <input type="text" id="textInput" placeholder="Your Text Here">
+        Text to embed as logo (multiline allowed):<br>
+        <textarea id="textInput" placeholder="Your Text Here" rows="4" cols="40"></textarea>
     </label><br>
 
     <button onclick="updateQR()">Generate QR Code</button>
@@ -69,34 +69,43 @@
         const qrContainer = document.getElementById("qrcode");
         qrCode.append(qrContainer);
 
-        // Function to generate SVG text with dynamic sizing
+        // Function to generate SVG text with multiline support
         function generateTextSVG(text, fontSize) {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
 
             // Set font size and measure the text
             ctx.font = `${fontSize}px Arial`;
-            const textWidth = ctx.measureText(text).width;
-            const textHeight = fontSize; // Height is roughly the font size
+
+            // Split text into lines based on the new line character
+            const lines = text.split("\n");
+            const lineHeight = fontSize * 1.2;  // Line spacing
+            const maxLineWidth = Math.max(...lines.map(line => ctx.measureText(line).width));
+
+            const textHeight = lineHeight * lines.length;  // Total height for all lines
 
             // Create SVG with the calculated size
             const svgNS = "http://www.w3.org/2000/svg";
             const svg = document.createElementNS(svgNS, "svg");
-            svg.setAttribute("width", textWidth + 10);  // Add a little padding
+            svg.setAttribute("width", maxLineWidth + 10);  // Add padding
             svg.setAttribute("height", textHeight + 10); // Add padding
 
-            // Create text element
-            const textElem = document.createElementNS(svgNS, "text");
-            textElem.setAttribute("x", "50%");
-            textElem.setAttribute("y", "50%");
-            textElem.setAttribute("text-anchor", "middle");
-            textElem.setAttribute("font-size", fontSize);
-            textElem.setAttribute("fill", "#000");
-            textElem.setAttribute("dy", "0.3em"); // Vertically align
-            textElem.textContent = text;
+            // Calculate starting Y position to center the text vertically
+            const startY = (textHeight + 10) / 2 - textHeight / 2;
 
-            // Append text to SVG
-            svg.appendChild(textElem);
+            // Create text elements for each line
+            lines.forEach((line, index) => {
+                const textElem = document.createElementNS(svgNS, "text");
+                textElem.setAttribute("x", "50%");
+                textElem.setAttribute("y", startY + lineHeight * index + fontSize); // Adjust vertical positioning
+                textElem.setAttribute("text-anchor", "middle");
+                textElem.setAttribute("font-size", fontSize);
+                textElem.setAttribute("fill", "#000");
+                textElem.textContent = line;
+
+                // Append text element to SVG
+                svg.appendChild(textElem);
+            });
 
             // Return the SVG as a string
             return new XMLSerializer().serializeToString(svg);
