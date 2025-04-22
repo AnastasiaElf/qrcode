@@ -5,10 +5,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Give me QRCode!</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        input,
+        button {
+            margin: 10px 0;
+            padding: 6px;
+            font-size: 1em;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
 <body>
-    QR Code generator
+
+    <h2>QR Code Generator with SVG Text as Logo</h2>
+
+    <label>
+        URL to encode:<br>
+        <input type="text" id="urlInput" placeholder="https://example.com" size="40">
+    </label><br>
+
+    <label>
+        Text to embed as logo:<br>
+        <input type="text" id="textInput" placeholder="Your Text Here">
+    </label><br>
+
+    <button onclick="updateQR()">Generate QR Code</button>
+
+    <div id="qrcode"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script>
+        const qrCode = new QRCodeStyling({
+            width: 300,
+            height: 300,
+            type: "svg",  // We're using SVG for better quality
+            data: "https://example.com",
+            image: "",  // We will set the SVG text logo here later
+            dotsOptions: {
+                color: "#000",
+                type: "rounded"
+            },
+            backgroundOptions: {
+                color: "#fff"
+            },
+            cornersSquareOptions: {
+                type: "extra-rounded"
+            },
+            cornersDotOptions: {
+                type: "dot"
+            }
+        });
+
+        const qrContainer = document.getElementById("qrcode");
+        qrCode.append(qrContainer);
+
+        // Function to generate SVG text with dynamic sizing
+        function generateTextSVG(text, fontSize) {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Set font size and measure the text
+            ctx.font = `${fontSize}px Arial`;
+            const textWidth = ctx.measureText(text).width;
+            const textHeight = fontSize; // Height is roughly the font size
+
+            // Create SVG with the calculated size
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("width", textWidth + 10);  // Add a little padding
+            svg.setAttribute("height", textHeight + 10); // Add padding
+
+            // Create text element
+            const textElem = document.createElementNS(svgNS, "text");
+            textElem.setAttribute("x", "50%");
+            textElem.setAttribute("y", "50%");
+            textElem.setAttribute("text-anchor", "middle");
+            textElem.setAttribute("font-size", fontSize);
+            textElem.setAttribute("fill", "#000");
+            textElem.setAttribute("dy", "0.3em"); // Vertically align
+            textElem.textContent = text;
+
+            // Append text to SVG
+            svg.appendChild(textElem);
+
+            // Return the SVG as a string
+            return new XMLSerializer().serializeToString(svg);
+        }
+
+        function updateQR() {
+            const url = document.getElementById("urlInput").value || "https://example.com";
+            const text = document.getElementById("textInput").value || "Your Text Here";
+
+            const fontSize = 20; // Set a fixed font size (can be dynamic too)
+
+            // Generate the SVG text logo with dynamic size based on text
+            const textSVG = generateTextSVG(text, fontSize);
+
+            // Update QR code with the generated SVG as the logo
+            qrCode.update({
+                data: url,
+                image: "data:image/svg+xml;base64," + btoa(textSVG)
+            });
+        }
+
+        // Initial render
+        qrCode.update();
+    </script>
 </body>
 
 </html>
