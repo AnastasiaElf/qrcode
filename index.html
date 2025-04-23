@@ -7,67 +7,270 @@
     <title>Give me QRCode!</title>
 
     <style>
+        :root {
+            --elf-background-color: #fafafa;
+            --elf-primary-color: #333333;
+            --elf-secondary-color: #eeeeee;
+
+            --elf-accent-light-color: #d2caef;
+            --elf-accent-color: #8f83ed;
+            --elf-accent-text-color: #6f63cf;
+
+            --elf-neutral-light-color: #b9b9b9;
+            --elf-neutral-color: #7f7f7f;
+            --elf-neutral-text-color: #333333;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --elf-background-color: #131313;
+                --elf-primary-color: #eeeeee;
+                --elf-secondary-color: #333333;
+
+                --elf-accent-light-color: #b0e9d5;
+                --elf-accent-color: #00a97d;
+                --elf-accent-text-color: #1a9473;
+            }
+        }
+
+        body * {
+            font-family: "Quicksand", sans-serif;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
             padding: 20px;
+            margin: 0;
+            color: var(--elf-primary-color);
+            background-color: var(--elf-background-color);
         }
 
-        input,
-        button {
-            margin: 10px 0;
-            padding: 6px;
-            font-size: 1em;
+        a {
+            text-decoration: none;
+            color: var(--elf-accent-text-color);
         }
 
-        #qrcode {
-            margin-top: 20px;
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-color: var(--elf-secondary-color);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .qrcode {
+            width: 350px;
+            height: 350px;
+            border-radius: 16px;
+            padding: 16px;
+            background-color: var(--elf-accent-light-color);
+            /* color: var(--elf-accent-text-color); */
+        }
+
+        .qrcode svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .button {
+            --elf-btn-background: var(--elf-accent-light-color);
+            --elf-btn-shadow: var(--elf-accent-color);
+            --elf-btn-color: var(--elf-accent-text-color);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            width: 100%;
+            padding: 12px 32px;
+            gap: 8px;
+            background: var(--elf-btn-background);
+            color: var(--elf-btn-color);
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            box-shadow: 4px 4px 1px 0px var(--elf-btn-shadow);
+            transition: all 0.2s;
+            outline: none;
+            text-decoration: none;
+            user-select: none;
+        }
+
+        .button:hover,
+        .button:focus {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 1px 0px var(--elf-btn-shadow);
+        }
+
+        .button:active {
+            transform: translate(3px, 3px);
+            box-shadow: none;
+        }
+
+        label {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 20px;
+            position: relative;
+        }
+
+        .label-text {
+            position: absolute;
+            left: 10px;
+            top: -5px;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 6px;
+            color: var(--elf-neutral-text-color);
+            background: var(--elf-neutral-light-color);
+        }
+
+        input {
+            flex: 1;
+            min-width: 160px;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 16px;
+            /* text-align: center; */
+            outline-color: var(--elf-accent-light-color);
+            font-weight: 600;
+            background: #ffffff;
+            color: var(--elf-neutral-text-color);
+        }
+
+        textarea {
+            flex: 1;
+            min-width: 160px;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 16px;
+            /* text-align: center; */
+            outline-color: var(--elf-accent-light-color);
+            font-weight: 600;
+            background: #ffffff;
+            color: var(--elf-neutral-text-color);
         }
     </style>
 </head>
 
 <body>
+    <div class="title">QR Code Generator</div>
+    <div class="qrcode" id="qrcode"></div>
 
-    <h2>QR Code Generator with Multiline SVG Text as Logo</h2>
+    <div class="form">
+        <label>
+            URL to encode:<br>
+            <input type="text" id="urlInput" placeholder="https://example.com" size="40">
+        </label><br>
 
-    <label>
-        URL to encode:<br>
-        <input type="text" id="urlInput" placeholder="https://example.com" size="40">
-    </label><br>
+        <label>
+            Text to embed as logo (multiline allowed):<br>
+            <textarea id="textInput" placeholder="Your Text Here" rows="4" cols="40"></textarea>
+        </label><br>
 
-    <label>
-        Text to embed as logo (multiline allowed):<br>
-        <textarea id="textInput" placeholder="Your Text Here" rows="4" cols="40"></textarea>
-    </label><br>
+        <select id="dotStyleSelect">
+            <option value="square">Square</option>
+            <option value="dots">Dots</option>
+            <option value="rounded" selected>Rounded</option>
+            <option value="classy">Classy</option>
+            <option value="classy-rounded">Classy Rounded</option>
+            <option value="extra-rounded">Extra Rounded</option>
+        </select>
 
-    <button onclick="updateQR()">Generate QR Code</button>
+        <div class="button" onclick="updateQR()">Generate QR Code</div>
 
-    <div id="qrcode"></div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+
+    <!-- <script src="qr-code-styling.js"></script> -->
+    <script src="qr-code-styling-custom.js"></script>
+    <!-- <script src="qr-code-styling-1.9.2.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script> -->
+
     <script>
         const qrCode = new QRCodeStyling({
-            width: 300,
-            height: 300,
+            // width: 300,
+            // height: 300,
+            margin: 1,
             type: "svg",  // We're using SVG for better quality
             data: "https://example.com",
+            shape: "circle",
+            "qrOptions": { "typeNumber": "0", "mode": "Byte", "errorCorrectionLevel": "H" },
             image: "",  // We will set the SVG text logo here later
             dotsOptions: {
-                color: "#000",
-                type: "rounded"
+                // color: "var(--elf-accent-text-color)",
+                "type": "rounded",
+                "color": "#6a1a4c",
+                "roundSize": true,
+                "gradient": {
+                    "type": "linear",
+                    "rotation": 0,
+                    "colorStops": [
+                        { "offset": 0, "color": "#225fa0" },
+                        { "offset": 1, "color": "#760f4e" }
+                    ]
+                }
             },
             backgroundOptions: {
-                color: "#fff"
+                // color: "none",
+                "round": 0,
+                "gradient": {
+                    "type": "linear",
+                    "rotation": 0,
+                    "colorStops": [
+                        { "offset": 0, "color": "#c2ceff" },
+                        { "offset": 1, "color": "#efecfe" }
+                    ]
+                }
             },
             cornersSquareOptions: {
-                type: "extra-rounded"
+                "type": "",
+                "color": "#000000",
+                "gradient": {
+                    "type": "linear",
+                    "rotation": 0,
+                    "colorStops": [
+                        { "offset": 0, "color": "#991a1a" },
+                        { "offset": 1, "color": "#ba26ae" }
+                    ]
+                }
             },
             cornersDotOptions: {
-                type: "dot"
+                // "type": "dot",
+                "gradient": {
+                    "type": "radial",
+                    "rotation": 0,
+                    "colorStops": [
+                        { "offset": 0, "color": "#1d9064" },
+                        { "offset": 1, "color": "#d53939" }
+                    ]
+                }
             }
         });
 
         const qrContainer = document.getElementById("qrcode");
         qrCode.append(qrContainer);
+
+        const qrCodeSVG = qrContainer.querySelector("svg");
 
         // Function to generate SVG text with multiline support
         function generateTextSVG(text, fontSize) {
@@ -75,7 +278,7 @@
             const ctx = canvas.getContext("2d");
 
             // Set font size and measure the text
-            ctx.font = `${fontSize}px Arial`;
+            ctx.font = `${fontSize}px Quicksand`;
 
             // Split text into lines based on the new line character
             const lines = text.split("\n");
@@ -98,6 +301,7 @@
                 const textElem = document.createElementNS(svgNS, "text");
                 textElem.setAttribute("x", "50%");
                 textElem.setAttribute("y", startY + lineHeight * index + fontSize); // Adjust vertical positioning
+                textElem.setAttribute("font-family", "Quicksand");
                 textElem.setAttribute("text-anchor", "middle");
                 textElem.setAttribute("font-size", fontSize);
                 textElem.setAttribute("fill", "#000");
@@ -114,6 +318,7 @@
         function updateQR() {
             const url = document.getElementById("urlInput").value || "https://example.com";
             const text = document.getElementById("textInput").value || "Your Text Here";
+            const dotStyle = document.getElementById("dotStyleSelect").value;
 
             const fontSize = 20; // Set a fixed font size (can be dynamic too)
 
@@ -123,11 +328,15 @@
             // Update QR code with the generated SVG as the logo
             qrCode.update({
                 data: url,
-                image: "data:image/svg+xml;base64," + btoa(textSVG)
+                image: "data:image/svg+xml;base64," + btoa(textSVG),
+                dotsOptions: {
+                    type: dotStyle
+                }
             });
+
+
         }
 
-        // Initial render
         qrCode.update();
     </script>
 </body>
