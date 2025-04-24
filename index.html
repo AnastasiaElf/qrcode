@@ -37,7 +37,7 @@
             }
         }
 
-        body * {
+        * {
             font-family: "Quicksand", sans-serif;
             box-sizing: border-box;
         }
@@ -51,11 +51,21 @@
             margin: 0;
             color: var(--elf-primary-color);
             background-color: var(--elf-background-color);
+            height: 100vh;
+            max-height: 100vh;
+            box-sizing: border-box;
         }
 
         a {
             text-decoration: none;
             color: var(--elf-accent-text-color);
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 100%;
         }
 
         .title {
@@ -64,20 +74,29 @@
             text-align: center;
         }
 
+        .content {
+            display: flex;
+            background-color: var(--elf-secondary-color);
+            border-radius: 10px;
+            padding: 10px;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
         .form {
+
             display: flex;
             flex-direction: column;
             gap: 16px;
-            background-color: var(--elf-secondary-color);
-            padding: 30px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 350px;
+            overflow-y: auto;
+            max-height: 100%;
+            padding: 10px;
+
         }
 
         .qrcode {
             width: 350px;
-            height: 350px;
+            max-width: 100%;
             border-radius: 16px;
             padding: 16px;
             background-color: var(--elf-accent-light-color);
@@ -152,7 +171,6 @@
             border: 1px solid #cccccc;
             border-radius: 6px;
             font-size: 16px;
-            /* text-align: center; */
             outline-color: var(--elf-accent-light-color);
             font-weight: 600;
             background: #ffffff;
@@ -167,7 +185,21 @@
             border: 1px solid #cccccc;
             border-radius: 6px;
             font-size: 16px;
-            /* text-align: center; */
+            outline-color: var(--elf-accent-light-color);
+            font-weight: 600;
+            background: #ffffff;
+            color: var(--elf-neutral-text-color);
+        }
+
+
+        select {
+            flex: 1;
+            min-width: 160px;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 16px;
             outline-color: var(--elf-accent-light-color);
             font-weight: 600;
             background: #ffffff;
@@ -176,32 +208,65 @@
     </style>
 </head>
 
+
+<!-- TODO: (add to the lib) -->
+<!-- Text instead of image (vector text) -->
+<!-- Svg Instead of image (scalable logo, etc) -->
+<!-- One gradient on the whole qr code -->
+
 <body>
-    <div class="title">QR Code Generator</div>
-    <div class="qrcode" id="qrcode"></div>
-
-    <div class="form">
-        <label>
-            URL to encode:<br>
-            <input type="text" id="urlInput" placeholder="https://example.com" size="40">
-        </label><br>
-
-        <label>
-            Text to embed as logo (multiline allowed):<br>
-            <textarea id="textInput" placeholder="Your Text Here" rows="4" cols="40"></textarea>
-        </label><br>
-
-        <select id="dotStyleSelect">
-            <option value="square">Square</option>
-            <option value="dots">Dots</option>
-            <option value="rounded" selected>Rounded</option>
-            <option value="classy">Classy</option>
-            <option value="classy-rounded">Classy Rounded</option>
-            <option value="extra-rounded">Extra Rounded</option>
-        </select>
-
+    <div class="header">
+        <div class="title">QR Code Generator</div>
+        <div class="qrcode" id="qrcode"></div>
         <div class="button" onclick="updateQR()">Generate QR Code</div>
+        <div class="button" onclick="downloadQR()">Download QR Code</div>
+    </div>
+    <div class="content">
 
+        <div class="form">
+            <label>
+                URL to encode:
+                <input type="text" id="urlInput" placeholder="https://example.com" size="40">
+            </label>
+
+            <label>
+                Text to embed as logo (multiline allowed):
+                <textarea id="textInput" placeholder="Your Text Here" rows="4" cols="40"></textarea>
+            </label>
+
+            <label>
+                Dots style:
+                <select id="dotStyleSelect">
+                    <option value="square">Square</option>
+                    <option value="dots">Dots</option>
+                    <option value="rounded" selected>Rounded</option>
+                    <option value="classy">Classy</option>
+                    <option value="classy-rounded">Classy Rounded</option>
+                    <option value="extra-rounded">Extra Rounded</option>
+                </select>
+            </label>
+
+            <label>
+                Corner square style:
+                <select id="cornerSquareStyleSelect">
+                    <option value="">Default</option>
+                    <option value="square">Square</option>
+                    <option value="extra-rounded" selected>Extra Rounded</option>
+                    <option value="dot">Dot</option>
+                </select>
+            </label>
+
+            <label>
+                Corner dot style:
+                <select id="cornerDotStyleSelect">
+                    <option value="" selected>Default</option>
+                    <option value="square">Square</option>
+                    <option value="dot" selected>Dot</option>
+                </select>
+            </label>
+
+
+        </div>
     </div>
 
 
@@ -323,8 +388,11 @@
             const url = document.getElementById("urlInput").value || "https://example.com";
             const text = document.getElementById("textInput").value || "Your Text Here";
             const dotStyle = document.getElementById("dotStyleSelect").value;
+            const cornerSquareStyle = document.getElementById("cornerSquareStyleSelect").value;
+            const cornerDotStyle = document.getElementById("cornerDotStyleSelect").value;
 
-            const fontSize = 20; // Set a fixed font size (can be dynamic too)
+            const fontSize = 200; // Set a fixed font size (can be dynamic too)
+            // const fontSize = 20; // Set a fixed font size (can be dynamic too)
 
             // Generate the SVG text logo with dynamic size based on text
             const textSVG = generateTextSVG(text, fontSize);
@@ -335,10 +403,20 @@
                 image: "data:image/svg+xml;base64," + btoa(textSVG),
                 dotsOptions: {
                     type: dotStyle
+                },
+                cornersSquareOptions: {
+                    type: cornerSquareStyle
+                },
+                cornersDotOptions: {
+                    type: cornerDotStyle
                 }
             });
 
 
+        }
+
+        function downloadQR() {
+            qrCode.download({ name: "qr", extension: "svg" });
         }
 
         qrCode.update();
