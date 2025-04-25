@@ -42,6 +42,7 @@
 
         * {
             font-family: "Quicksand", sans-serif;
+            font-weight: 600;
             box-sizing: border-box;
         }
 
@@ -49,7 +50,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 18px;
+            gap: 16px;
             padding: 20px;
             margin: 0;
             color: var(--elf-primary-color);
@@ -66,9 +67,25 @@
 
         .header {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: center;
+            /* flex-direction: column; */
             gap: 16px;
             max-width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 99999;
+            background: var(--elf-background-color);
+            width: 100%;
+            box-shadow: 0px 4px 10px var(--elf-background-color);
+            padding: 16px;
+            align-items: center;
+        }
+
+        .header-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
         .download {
@@ -126,7 +143,7 @@
             /* color: var(--elf-accent-text-color); */
         }
 
-        .qrcode svg {
+        .qrcode > * {
             width: 100%;
             height: 100%;
         }
@@ -272,6 +289,41 @@
         .submit-button {
             max-width: 300px;
         }
+
+        .advanced-settings {
+            width: 100%;
+        }
+
+        .advanced-toggle {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .advanced-toggle:after {
+            content: "\2335";
+            font-weight: bold;
+            transition: transform 0.3s;
+            right: 4px;
+            position: absolute;
+        }
+
+        .advanced-toggle.active:after {
+            transform: scale(-1, -1)
+        }
+
+        .advanced-content-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .advanced-content {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
     </style>
 </head>
 
@@ -283,10 +335,20 @@
 <!-- Add rounded background + stroke inside/outside -->
 
 <body>
+    <div class="title">QR Code Generator</div>
     <div class="header">
-        <div class="title">QR Code Generator</div>
-        <div class="qrcode" id="qrcode"></div>
-        <div id="error" class="error"></div>
+        <div class="header-col">
+            <div class="button button-sm" onclick="downloadQR('svg')">SVG</div>
+            <div class="button button-sm" onclick="downloadQR('png')">PNG</div>
+        </div>
+        <div>
+            <div class="qrcode" id="qrcode"></div>
+            <div id="error" class="error"></div>
+        </div>
+        <div class="header-col">
+            <div class="button button-sm" onclick="downloadQR('jpeg')">JPEG</div>
+            <div class="button button-sm" onclick="downloadQR('webp')">WEBP</div>
+        </div>
     </div>
     <div class="settings">
         <div class="form">
@@ -304,56 +366,6 @@
                 Image/Text margin
                 <input type="number" id="imageMargin" min="0" value="4">
             </label>
-
-            <div class="input-group">
-                <div class="input-group-title">Margin %</div>
-                <div class="button-group">
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="0">
-                        0
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="10">
-                        1
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="20">
-                        2
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="30" checked>
-                        3
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="40">
-                        4
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="50">
-                        5
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="60">
-                        6
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="70">
-                        7
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="80">
-                        8
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="90">
-                        9
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="margin" value="100">
-                        10
-                    </label>
-                </div>
-            </div>
 
 
             <div class="input-group">
@@ -469,32 +481,91 @@
                 </div>
             </div>
 
-            <div class="input-group">
-                <div class="input-group-title">Error Correction Level</div>
-                <div class="button-group">
-                    <label class="radio-button text-button">
-                        <input type="radio" name="correction" value="L">
-                        L
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="correction" value="M">
-                        M
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="correction" value="Q" checked>
-                        Q
-                    </label>
-                    <label class="radio-button text-button">
-                        <input type="radio" name="correction" value="H">
-                        H
-                    </label>
+            <div class="advanced-settings">
+                <div class="advanced-toggle">Advanced options</div>
+                <div class="advanced-content-wrapper">
+                    <div class="advanced-content">
+                        <div class="input-group">
+                            <div class="input-group-title">Margin %</div>
+                            <div class="button-group">
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="0">
+                                    0
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="10">
+                                    1
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="20">
+                                    2
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="30" checked>
+                                    3
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="40">
+                                    4
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="50">
+                                    5
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="60">
+                                    6
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="70">
+                                    7
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="80">
+                                    8
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="90">
+                                    9
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="margin" value="100">
+                                    10
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="input-group-title">Error Correction Level</div>
+                            <div class="button-group">
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="correction" value="L">
+                                    L
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="correction" value="M">
+                                    M
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="correction" value="Q" checked>
+                                    Q
+                                </label>
+                                <label class="radio-button text-button">
+                                    <input type="radio" name="correction" value="H">
+                                    H
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-            <div class="button submit-button" onclick="updateQR()">Generate</div>
+
+            <!-- <div class="button submit-button" onclick="updateQR()">Generate</div> -->
         </div>
     </div>
 
-    <div class="download">
+    <!-- <div class="download">
         <div class="download-title">Download</div>
         <div class="button-group">
             <div class="button button-sm" onclick="downloadQR('svg')">SVG</div>
@@ -502,7 +573,7 @@
             <div class="button button-sm" onclick="downloadQR('jpeg')">JPEG</div>
             <div class="button button-sm" onclick="downloadQR('webp')">WEBP</div>
         </div>
-    </div>
+    </div> -->
 
     <div class="author">
         <span>Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a></span>
@@ -514,9 +585,24 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script> -->
 
     <script>
+        document.querySelector('.advanced-toggle').addEventListener('click', (e) => {
+            e.target.classList.toggle('active');
+            const content = e.target.nextElementSibling;
+            content.style.maxHeight = content.style.maxHeight ? '' : content.scrollHeight + 'px';
+        });
+
+        // For text and textarea (real-time input)
+        document.querySelectorAll('input[type="text"], input[type="number"], textarea')
+            .forEach(el => el.addEventListener('input', updateQR));
+
+        // For radio and checkbox (on change)
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"]')
+            .forEach(el => el.addEventListener('change', updateQR));
+
         const qrCode = new QRCodeStyling({
             height: 1000,
             width: 1000,
+            // type: "canvas",
             type: "svg",
         });
 
