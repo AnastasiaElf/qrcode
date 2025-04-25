@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <title>Give me QRCode!</title>
+    <title>Give me QR Code!</title>
 
     <style>
         :root {
@@ -54,9 +54,9 @@
             margin: 0;
             color: var(--elf-primary-color);
             background-color: var(--elf-background-color);
-            height: 100vh;
-            max-height: 100vh;
-            box-sizing: border-box;
+            /* height: 100vh; */
+            /* max-height: 100vh; */
+            /* box-sizing: border-box; */
         }
 
         a {
@@ -71,23 +71,19 @@
             max-width: 100%;
         }
 
-        .result {
-            display: flex;
-            gap: 10px;
-        }
-
-        .result-col {
+        .download {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            background-color: var(--elf-secondary-color);
+            border-radius: 10px;
+            padding: 16px;
+            width: 100%;
+            max-width: 700px;
+
         }
 
-        .result-col.qrcode-col {
-            width: 300px;
-            max-width: 100%;
-        }
-
-        .result-col-title {
+        .download-title {
             text-align: center;
         }
 
@@ -102,22 +98,27 @@
             background-color: var(--elf-secondary-color);
             border-radius: 10px;
             padding: 10px;
-            overflow: hidden;
+            /* overflow: hidden; */
             max-width: 100%;
+            width: 100%;
+            max-width: 700px;
+            justify-content: center;
         }
 
         .form {
             display: flex;
+            align-items: center;
             flex-direction: column;
             gap: 16px;
-            overflow-y: auto;
-            max-height: 100%;
+            /* overflow-y: auto; */
+            /* max-height: 100%; */
             padding: 10px;
+            width: 100%;
 
         }
 
         .qrcode {
-            width: 100%;
+            width: 300px;
             max-width: 100%;
             border-radius: 16px;
             padding: 16px;
@@ -173,7 +174,7 @@
         }
 
         .button.button-sm {
-            width: 110px;
+            width: 80px;
             padding: 12px;
         }
 
@@ -219,12 +220,16 @@
             padding: 10px;
             background: var(--elf-background-color);
             border-radius: 8px;
+            width: 100%;
         }
 
         .button-group {
             display: flex;
             flex-direction: row;
             align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
             gap: 8px;
         }
 
@@ -280,24 +285,8 @@
 <body>
     <div class="header">
         <div class="title">QR Code Generator</div>
-        <div class="result">
-            <div class="result-col">
-                <div class="result-col-title">Title</div>
-                <div class="button button-sm">Button</div>
-                <div class="button button-sm">Button</div>
-            </div>
-            <div class="result-col qrcode-col">
-                <div class="qrcode" id="qrcode"></div>
-                <div id="error" class="error"></div>
-            </div>
-            <div class="result-col">
-                <div class="result-col-title">Download</div>
-                <div class="button button-sm" onclick="downloadQR('svg')">SVG</div>
-                <div class="button button-sm" onclick="downloadQR('png')">PNG</div>
-                <div class="button button-sm" onclick="downloadQR('jpeg')">JPEG</div>
-                <div class="button button-sm" onclick="downloadQR('webp')">WEBP</div>
-            </div>
-        </div>
+        <div class="qrcode" id="qrcode"></div>
+        <div id="error" class="error"></div>
     </div>
     <div class="settings">
         <div class="form">
@@ -501,13 +490,27 @@
                     </label>
                 </div>
             </div>
+            <div class="button submit-button" onclick="updateQR()">Generate</div>
         </div>
     </div>
-    <div class="button submit-button" onclick="updateQR()">Generate</div>
+
+    <div class="download">
+        <div class="download-title">Download</div>
+        <div class="button-group">
+            <div class="button button-sm" onclick="downloadQR('svg')">SVG</div>
+            <div class="button button-sm" onclick="downloadQR('png')">PNG</div>
+            <div class="button button-sm" onclick="downloadQR('jpeg')">JPEG</div>
+            <div class="button button-sm" onclick="downloadQR('webp')">WEBP</div>
+        </div>
+    </div>
+
+    <div class="author">
+        <span>Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a></span>
+    </div>
 
 
-    <script src="qr-code-styling.js"></script>
-    <!-- <script src="qr-code-styling-custom.js"></script> -->
+    <!-- <script src="qr-code-styling.js"></script> -->
+    <script src="qr-code-styling-custom.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script> -->
 
     <script>
