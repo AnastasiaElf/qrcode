@@ -205,6 +205,45 @@
             background: #ffffff;
             color: var(--elf-neutral-text-color);
         }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .check-button,
+        .radio-button {
+            padding: 4px 10px;
+            background: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .check-button input,
+        .radio-button input {
+            display: none;
+        }
+
+        .check-button:has(input:checked),
+        .radio-button:has(input:checked) {
+            background-color: #333333;
+            color: #ffffff;
+            display: flex;
+        }
+
+        .error {
+            display: none;
+            text-align: center;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -213,11 +252,13 @@
 <!-- Text instead of image (vector text) -->
 <!-- Svg Instead of image (scalable logo, etc) -->
 <!-- One gradient on the whole qr code -->
+<!-- Add rounded background + stroke inside/outside -->
 
 <body>
     <div class="header">
         <div class="title">QR Code Generator</div>
         <div class="qrcode" id="qrcode"></div>
+        <div id="error" class="error"></div>
         <div class="button" onclick="updateQR()">Generate QR Code</div>
         <div class="button" onclick="downloadQR()">Download QR Code</div>
     </div>
@@ -230,39 +271,171 @@
             </label>
 
             <label>
-                Text to embed as logo (multiline allowed):
+                Center Text:
                 <textarea id="textInput" placeholder="Your Text Here" rows="4" cols="40"></textarea>
             </label>
 
-            <label>
-                Dots style:
-                <select id="dotStyleSelect">
-                    <option value="square">Square</option>
-                    <option value="dots">Dots</option>
-                    <option value="rounded" selected>Rounded</option>
-                    <option value="classy">Classy</option>
-                    <option value="classy-rounded">Classy Rounded</option>
-                    <option value="extra-rounded">Extra Rounded</option>
-                </select>
-            </label>
+            <div class="input-group">
+                <div class="input-group-title">Margin %</div>
+                <div class="button-group">
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="0">
+                        0
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="10">
+                        1
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="20">
+                        2
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="30" checked>
+                        3
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="40">
+                        4
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="50">
+                        5
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="60">
+                        6
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="70">
+                        7
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="80">
+                        8
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="90">
+                        9
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="margin" value="100">
+                        10
+                    </label>
+                </div>
+            </div>
 
-            <label>
-                Corner square style:
-                <select id="cornerSquareStyleSelect">
-                    <option value="">Default</option>
-                    <option value="square">Square</option>
-                    <option value="extra-rounded" selected>Extra Rounded</option>
-                    <option value="dot">Dot</option>
-                </select>
-            </label>
+
+            <div class="input-group">
+                <div class="input-group-title">QR Code Shape</div>
+                <div class="button-group">
+                    <label class="radio-button">
+                        <input type="radio" name="shape" value="square" checked>
+                        Square
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="shape" value="circle">
+                        Circle
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-group-title">Dots style</div>
+                <div class="button-group">
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="square" checked>
+                        Square
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="dots">
+                        Dots
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="rounded">
+                        Rounded
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="classy">
+                        Classy
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="classy-rounded">
+                        Classy Rounded
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="extra-rounded">
+                        Extra Rounded
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-group-title">Corner square style:</div>
+                <div class="button-group">
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="rounded" checked>
+                        Rounded
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="square">
+                        Square
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="extra-rounded">
+                        Extra Rounded
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="dot">
+                        Dot
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="dots">
+                        Dots
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="classy">
+                        Classy
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="classy-rounded">
+                        Classy rounded
+                    </label>
+                </div>
+            </div>
 
             <label>
                 Corner dot style:
-                <select id="cornerDotStyleSelect">
-                    <option value="" selected>Default</option>
-                    <option value="square">Square</option>
-                    <option value="dot" selected>Dot</option>
-                </select>
+                <div class="button-group">
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="rounded" checked>
+                        Rounded
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="square">
+                        Square
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="extra-rounded">
+                        Extra Rounded
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="dot">
+                        Dot
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="dots">
+                        Dots
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="classy">
+                        Classy
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="classy-rounded">
+                        Classy rounded
+                    </label>
+                </div>
             </label>
 
 
@@ -277,63 +450,10 @@
 
     <script>
         const qrCode = new QRCodeStyling({
-            // width: 300,
-            // height: 300,
-            margin: 1,
-            type: "svg",  // We're using SVG for better quality
-            data: "https://example.com",
-            shape: "circle",
+            height: 1000,
+            width: 1000,
+            type: "svg",
             "qrOptions": { "typeNumber": "0", "mode": "Byte", "errorCorrectionLevel": "H" },
-            image: "",  // We will set the SVG text logo here later
-            dotsOptions: {
-                // color: "var(--elf-accent-text-color)",
-                "type": "rounded",
-                "color": "#6a1a4c",
-                "roundSize": true,
-                "gradient": {
-                    "type": "linear",
-                    "rotation": 0,
-                    "colorStops": [
-                        { "offset": 0, "color": "#225fa0" },
-                        { "offset": 1, "color": "#760f4e" }
-                    ]
-                }
-            },
-            backgroundOptions: {
-                // color: "none",
-                "round": 0,
-                "gradient": {
-                    "type": "linear",
-                    "rotation": 0,
-                    "colorStops": [
-                        { "offset": 0, "color": "#c2ceff" },
-                        { "offset": 1, "color": "#efecfe" }
-                    ]
-                }
-            },
-            cornersSquareOptions: {
-                "type": "",
-                "color": "#000000",
-                "gradient": {
-                    "type": "linear",
-                    "rotation": 0,
-                    "colorStops": [
-                        { "offset": 0, "color": "#991a1a" },
-                        { "offset": 1, "color": "#ba26ae" }
-                    ]
-                }
-            },
-            cornersDotOptions: {
-                // "type": "dot",
-                "gradient": {
-                    "type": "radial",
-                    "rotation": 0,
-                    "colorStops": [
-                        { "offset": 0, "color": "#1d9064" },
-                        { "offset": 1, "color": "#d53939" }
-                    ]
-                }
-            }
         });
 
         const qrContainer = document.getElementById("qrcode");
@@ -361,6 +481,8 @@
             const svg = document.createElementNS(svgNS, "svg");
             svg.setAttribute("width", maxLineWidth + 10);  // Add padding
             svg.setAttribute("height", textHeight + 10); // Add padding
+            svg.setAttribute("viewBox", `0 0 ${maxLineWidth + 10} ${textHeight + 10}`);
+
 
             // Calculate starting Y position to center the text vertically
             const startY = (textHeight + 10) / 2 - textHeight / 2;
@@ -374,6 +496,7 @@
                 textElem.setAttribute("text-anchor", "middle");
                 textElem.setAttribute("font-size", fontSize);
                 textElem.setAttribute("fill", "#000");
+                // textElem.setAttribute("fill", "url('#dots-color-2')");
                 textElem.textContent = line;
 
                 // Append text element to SVG
@@ -386,10 +509,23 @@
 
         function updateQR() {
             const url = document.getElementById("urlInput").value || "https://example.com";
-            const text = document.getElementById("textInput").value || "Your Text Here";
-            const dotStyle = document.getElementById("dotStyleSelect").value;
-            const cornerSquareStyle = document.getElementById("cornerSquareStyleSelect").value;
-            const cornerDotStyle = document.getElementById("cornerDotStyleSelect").value;
+            const text = document.getElementById("textInput").value;
+            // NOTE: margin can't be more than half of width (I would say 30% is max for normal render)
+            const margin = document.querySelector('input[name="margin"]:checked').value;
+            const dotStyle = document.querySelector('input[name="dot_style"]:checked').value;
+            const cornerSquareStyle = document.querySelector('input[name="corner_square_shape"]:checked').value;
+            const cornerDotStyle = document.querySelector('input[name="corner_dot_shape"]:checked').value;
+            const shape = document.querySelector('input[name="shape"]:checked').value;
+
+            const errorDiv = document.getElementById('error');
+            errorDiv.innerHTML = '';
+            errorDiv.style.display = "none";
+
+            if (margin > 100 || margin < 0) {
+                errorDiv.innerHTML = 'Please enter valid values';
+                errorDiv.style.display = "block";
+                return;
+            }
 
             const fontSize = 200; // Set a fixed font size (can be dynamic too)
             // const fontSize = 20; // Set a fixed font size (can be dynamic too)
@@ -400,6 +536,8 @@
             // Update QR code with the generated SVG as the logo
             qrCode.update({
                 data: url,
+                shape: shape,
+                margin: margin,
                 image: "data:image/svg+xml;base64," + btoa(textSVG),
                 dotsOptions: {
                     type: dotStyle
@@ -419,7 +557,7 @@
             qrCode.download({ name: "qr", extension: "svg" });
         }
 
-        qrCode.update();
+        updateQR()
     </script>
 </body>
 
