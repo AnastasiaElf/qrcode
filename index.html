@@ -23,6 +23,9 @@
             --elf-neutral-light-color: #b9b9b9;
             --elf-neutral-color: #7f7f7f;
             --elf-neutral-text-color: #333333;
+
+            --elf-input-background: #ffffff;
+            --elf-input-border: #cccccc;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -68,13 +71,33 @@
             max-width: 100%;
         }
 
+        .result {
+            display: flex;
+            gap: 10px;
+        }
+
+        .result-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .result-col.qrcode-col {
+            width: 300px;
+            max-width: 100%;
+        }
+
+        .result-col-title {
+            text-align: center;
+        }
+
         .title {
             font-size: 20px;
             font-weight: 600;
             text-align: center;
         }
 
-        .content {
+        .settings {
             display: flex;
             background-color: var(--elf-secondary-color);
             border-radius: 10px;
@@ -84,7 +107,6 @@
         }
 
         .form {
-
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -95,7 +117,7 @@
         }
 
         .qrcode {
-            width: 350px;
+            width: 100%;
             max-width: 100%;
             border-radius: 16px;
             padding: 16px;
@@ -120,6 +142,7 @@
             width: 100%;
             padding: 12px 32px;
             gap: 8px;
+            margin-right: 4px;
             background: var(--elf-btn-background);
             color: var(--elf-btn-color);
             font-size: 16px;
@@ -143,6 +166,17 @@
             box-shadow: none;
         }
 
+        .button.button-neutral {
+            --elf-btn-background: var(--elf-neutral-light-color);
+            --elf-btn-shadow: var(--elf-neutral-color);
+            --elf-btn-color: var(--elf-neutral-text-color);
+        }
+
+        .button.button-sm {
+            width: 110px;
+            padding: 12px;
+        }
+
         label {
             display: flex;
             flex-wrap: wrap;
@@ -163,46 +197,18 @@
             background: var(--elf-neutral-light-color);
         }
 
-        input {
-            flex: 1;
-            min-width: 160px;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #cccccc;
-            border-radius: 6px;
-            font-size: 16px;
-            outline-color: var(--elf-accent-light-color);
-            font-weight: 600;
-            background: #ffffff;
-            color: var(--elf-neutral-text-color);
-        }
-
+        input,
         textarea {
             flex: 1;
             min-width: 160px;
             padding: 10px;
             margin: 5px 0;
-            border: 1px solid #cccccc;
+            border: 1px solid var(--elf-input-border);
             border-radius: 6px;
             font-size: 16px;
             outline-color: var(--elf-accent-light-color);
             font-weight: 600;
-            background: #ffffff;
-            color: var(--elf-neutral-text-color);
-        }
-
-
-        select {
-            flex: 1;
-            min-width: 160px;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #cccccc;
-            border-radius: 6px;
-            font-size: 16px;
-            outline-color: var(--elf-accent-light-color);
-            font-weight: 600;
-            background: #ffffff;
+            background: var(--elf-input-background);
             color: var(--elf-neutral-text-color);
         }
 
@@ -210,6 +216,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 10px;
+            background: var(--elf-background-color);
+            border-radius: 8px;
         }
 
         .button-group {
@@ -221,10 +230,17 @@
 
         .check-button,
         .radio-button {
-            padding: 4px 10px;
-            background: #ffffff;
+            padding: 6px;
+            background: var(--elf-input-background);
+            color: var(--elf-neutral-text-color);
             border-radius: 6px;
             cursor: pointer;
+            border: 3px solid var(--elf-secondary-color);
+        }
+
+        .check-button.text-button,
+        .radio-button.text-button {
+            padding: 4px 10px;
         }
 
         .check-button input,
@@ -234,8 +250,7 @@
 
         .check-button:has(input:checked),
         .radio-button:has(input:checked) {
-            background-color: #333333;
-            color: #ffffff;
+            border-color: var(--elf-accent-text-color);
             display: flex;
         }
 
@@ -243,6 +258,14 @@
             display: none;
             text-align: center;
             font-size: 14px;
+        }
+
+        .radio-image {
+            width: 40px;
+        }
+
+        .submit-button {
+            max-width: 300px;
         }
     </style>
 </head>
@@ -257,68 +280,86 @@
 <body>
     <div class="header">
         <div class="title">QR Code Generator</div>
-        <div class="qrcode" id="qrcode"></div>
-        <div id="error" class="error"></div>
-        <div class="button" onclick="updateQR()">Generate QR Code</div>
-        <div class="button" onclick="downloadQR()">Download QR Code</div>
+        <div class="result">
+            <div class="result-col">
+                <div class="result-col-title">Title</div>
+                <div class="button button-sm">Button</div>
+                <div class="button button-sm">Button</div>
+            </div>
+            <div class="result-col qrcode-col">
+                <div class="qrcode" id="qrcode"></div>
+                <div id="error" class="error"></div>
+            </div>
+            <div class="result-col">
+                <div class="result-col-title">Download</div>
+                <div class="button button-sm" onclick="downloadQR('svg')">SVG</div>
+                <div class="button button-sm" onclick="downloadQR('png')">PNG</div>
+                <div class="button button-sm" onclick="downloadQR('jpeg')">JPEG</div>
+                <div class="button button-sm" onclick="downloadQR('webp')">WEBP</div>
+            </div>
+        </div>
     </div>
-    <div class="content">
-
+    <div class="settings">
         <div class="form">
             <label>
                 URL to encode:
-                <input type="text" id="urlInput" placeholder="https://example.com" size="40">
+                <input type="text" id="urlInput" value="https://example.com">
             </label>
 
             <label>
                 Center Text:
-                <textarea id="textInput" placeholder="Your Text Here" rows="4" cols="40"></textarea>
+                <textarea id="textInput">Text</textarea>
+            </label>
+
+            <label>
+                Image/Text margin
+                <input type="number" id="imageMargin" min="0" value="4">
             </label>
 
             <div class="input-group">
                 <div class="input-group-title">Margin %</div>
                 <div class="button-group">
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="0">
                         0
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="10">
                         1
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="20">
                         2
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="30" checked>
                         3
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="40">
                         4
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="50">
                         5
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="60">
                         6
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="70">
                         7
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="80">
                         8
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="90">
                         9
                     </label>
-                    <label class="radio-button">
+                    <label class="radio-button text-button">
                         <input type="radio" name="margin" value="100">
                         10
                     </label>
@@ -327,125 +368,146 @@
 
 
             <div class="input-group">
-                <div class="input-group-title">QR Code Shape</div>
+                <!-- <div class="input-group-title">QR Code Shape</div> -->
                 <div class="button-group">
                     <label class="radio-button">
                         <input type="radio" name="shape" value="square" checked>
-                        Square
+                        <img class="radio-image" src="/images/shape_square.png"
+                            style="width: 32px; height: 32px; margin: 4px;" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="shape" value="circle">
-                        Circle
+                        <img class="radio-image" src="/images/shape_circle.png" />
                     </label>
                 </div>
             </div>
 
             <div class="input-group">
-                <div class="input-group-title">Dots style</div>
+                <!-- <div class="input-group-title">Dots style</div> -->
                 <div class="button-group">
                     <label class="radio-button">
-                        <input type="radio" name="dot_style" value="square" checked>
-                        Square
+                        <input type="radio" name="dot_style" value="square">
+                        <img class="radio-image" src="/images/dot_square.png" />
                     </label>
                     <label class="radio-button">
-                        <input type="radio" name="dot_style" value="dots">
-                        Dots
-                    </label>
-                    <label class="radio-button">
-                        <input type="radio" name="dot_style" value="rounded">
-                        Rounded
-                    </label>
-                    <label class="radio-button">
-                        <input type="radio" name="dot_style" value="classy">
-                        Classy
-                    </label>
-                    <label class="radio-button">
-                        <input type="radio" name="dot_style" value="classy-rounded">
-                        Classy Rounded
+                        <input type="radio" name="dot_style" value="rounded" checked>
+                        <img class="radio-image" src="/images/dot_rounded.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="dot_style" value="extra-rounded">
-                        Extra Rounded
+                        <img class="radio-image" src="/images/dot_extra_rounded.png" />
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="dots">
+                        <img class="radio-image" src="/images/dot_dots.png" />
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="classy">
+                        <img class="radio-image" src="/images/dot_classy.png" />
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="dot_style" value="classy-rounded">
+                        <img class="radio-image" src="/images/dot_classy_rounded.png" />
                     </label>
                 </div>
             </div>
 
             <div class="input-group">
-                <div class="input-group-title">Corner square style:</div>
+                <!-- <div class="input-group-title">Corner square style:</div> -->
                 <div class="button-group">
                     <label class="radio-button">
-                        <input type="radio" name="corner_square_shape" value="rounded" checked>
-                        Rounded
+                        <input type="radio" name="corner_square_shape" value="square">
+                        <img class="radio-image" src="/images/corner_square_square.png" />
                     </label>
                     <label class="radio-button">
-                        <input type="radio" name="corner_square_shape" value="square">
-                        Square
+                        <input type="radio" name="corner_square_shape" value="rounded" checked>
+                        <img class="radio-image" src="/images/corner_square_rounded.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_square_shape" value="extra-rounded">
-                        Extra Rounded
+                        <img class="radio-image" src="/images/corner_square_extra_rounded.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_square_shape" value="dot">
-                        Dot
-                    </label>
-                    <label class="radio-button">
-                        <input type="radio" name="corner_square_shape" value="dots">
-                        Dots
+                        <img class="radio-image" src="/images/corner_square_dot.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_square_shape" value="classy">
-                        Classy
+                        <img class="radio-image" src="/images/corner_square_classy.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_square_shape" value="classy-rounded">
-                        Classy rounded
+                        <img class="radio-image" src="/images/corner_square_classy_rounded.png" />
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_square_shape" value="dots">
+                        <img class="radio-image" src="/images/corner_square_dots.png" />
                     </label>
                 </div>
             </div>
 
-            <label>
-                Corner dot style:
+            <div class="input-group">
+                <!-- Corner dot style: -->
                 <div class="button-group">
                     <label class="radio-button">
-                        <input type="radio" name="corner_dot_shape" value="rounded" checked>
-                        Rounded
+                        <input type="radio" name="corner_dot_shape" value="square">
+                        <img class="radio-image" src="/images/corner_dot_square.png" />
                     </label>
                     <label class="radio-button">
-                        <input type="radio" name="corner_dot_shape" value="square">
-                        Square
+                        <input type="radio" name="corner_dot_shape" value="rounded" checked>
+                        <img class="radio-image" src="/images/corner_dot_rounded.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_dot_shape" value="extra-rounded">
-                        Extra Rounded
+                        <img class="radio-image" src="/images/corner_dot_extra_rounded.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_dot_shape" value="dot">
-                        Dot
-                    </label>
-                    <label class="radio-button">
-                        <input type="radio" name="corner_dot_shape" value="dots">
-                        Dots
+                        <img class="radio-image" src="/images/corner_dot_dot.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_dot_shape" value="classy">
-                        Classy
+                        <img class="radio-image" src="/images/corner_dot_classy.png" />
                     </label>
                     <label class="radio-button">
                         <input type="radio" name="corner_dot_shape" value="classy-rounded">
-                        Classy rounded
+                        <img class="radio-image" src="/images/corner_dot_classy_rounded.png" />
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="corner_dot_shape" value="dots">
+                        <img class="radio-image" src="/images/corner_dot_dots.png" />
                     </label>
                 </div>
-            </label>
+            </div>
 
-
+            <div class="input-group">
+                <div class="input-group-title">Error Correction Level</div>
+                <div class="button-group">
+                    <label class="radio-button text-button">
+                        <input type="radio" name="correction" value="L">
+                        L
+                    </label>
+                    <label class="radio-button text-button">
+                        <input type="radio" name="correction" value="M">
+                        M
+                    </label>
+                    <label class="radio-button text-button">
+                        <input type="radio" name="correction" value="Q" checked>
+                        Q
+                    </label>
+                    <label class="radio-button text-button">
+                        <input type="radio" name="correction" value="H">
+                        H
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="button submit-button" onclick="updateQR()">Generate</div>
 
 
-    <!-- <script src="qr-code-styling.js"></script> -->
-    <script src="qr-code-styling-custom.js"></script>
-    <!-- <script src="qr-code-styling-1.9.2.js"></script> -->
+    <script src="qr-code-styling.js"></script>
+    <!-- <script src="qr-code-styling-custom.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script> -->
 
     <script>
@@ -453,7 +515,6 @@
             height: 1000,
             width: 1000,
             type: "svg",
-            "qrOptions": { "typeNumber": "0", "mode": "Byte", "errorCorrectionLevel": "H" },
         });
 
         const qrContainer = document.getElementById("qrcode");
@@ -508,7 +569,7 @@
         }
 
         function updateQR() {
-            const url = document.getElementById("urlInput").value || "https://example.com";
+            const url = document.getElementById("urlInput").value;
             const text = document.getElementById("textInput").value;
             // NOTE: margin can't be more than half of width (I would say 30% is max for normal render)
             const margin = document.querySelector('input[name="margin"]:checked').value;
@@ -516,12 +577,14 @@
             const cornerSquareStyle = document.querySelector('input[name="corner_square_shape"]:checked').value;
             const cornerDotStyle = document.querySelector('input[name="corner_dot_shape"]:checked').value;
             const shape = document.querySelector('input[name="shape"]:checked').value;
+            const correction = document.querySelector('input[name="correction"]:checked').value;
+            const imageMargin = document.getElementById("imageMargin").value;
 
             const errorDiv = document.getElementById('error');
             errorDiv.innerHTML = '';
             errorDiv.style.display = "none";
 
-            if (margin > 100 || margin < 0) {
+            if (!url) {
                 errorDiv.innerHTML = 'Please enter valid values';
                 errorDiv.style.display = "block";
                 return;
@@ -538,7 +601,12 @@
                 data: url,
                 shape: shape,
                 margin: margin,
+                "qrOptions": { "typeNumber": "0", "mode": "Byte", "errorCorrectionLevel": correction },
+
                 image: "data:image/svg+xml;base64," + btoa(textSVG),
+                imageOptions: {
+                    margin: imageMargin
+                },
                 dotsOptions: {
                     type: dotStyle
                 },
@@ -553,8 +621,8 @@
 
         }
 
-        function downloadQR() {
-            qrCode.download({ name: "qr", extension: "svg" });
+        function downloadQR(extension) {
+            qrCode.download({ name: `${new Date().toISOString().split('T')[0]}_qrcode.anastasiaelf.com`, extension: extension });
         }
 
         updateQR()
