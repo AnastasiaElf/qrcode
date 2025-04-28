@@ -143,7 +143,7 @@
             /* color: var(--elf-accent-text-color); */
         }
 
-        .qrcode > * {
+        .qrcode>* {
             width: 100%;
             height: 100%;
         }
@@ -324,6 +324,14 @@
             gap: 16px;
             margin-top: 16px;
         }
+
+        .text-input-label {
+            width: 100%;
+        }
+
+        .text-input {
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -352,21 +360,41 @@
     </div>
     <div class="settings">
         <div class="form">
-            <label>
+            <label class="text-input-label">
                 URL to encode:
-                <input type="text" id="urlInput" value="https://example.com">
+                <input class="text-input" type="text" id="urlInput" value="https://example.com">
             </label>
 
-            <label>
-                Center Text:
-                <textarea id="textInput">Text</textarea>
-            </label>
+            <div class="input-group">
+                <div class="button-group">
+                    <label class="radio-button">
+                        <input type="radio" name="logoType" value="none" checked>
+                        No logo
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="logoType" value="text" checked>
+                        Text
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="logoType" value="image">
+                        Image
+                    </label>
+                </div>
+            </div>
 
-            <label>
-                Image/Text margin
-                <input type="number" id="imageMargin" min="0" value="4">
-            </label>
 
+            <div id="textLogoInputWrapper" style="width: 100%;">
+                <label class="text-input-label">
+                    Logo text
+                    <textarea class="text-input" id="textInput">Text</textarea>
+                </label>
+            </div>
+
+            <div id="fileLogoInputWrapper" style="display: none;">
+                <label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </label>
+            </div>
 
             <div class="input-group">
                 <!-- <div class="input-group-title">QR Code Shape</div> -->
@@ -485,6 +513,10 @@
                 <div class="advanced-toggle">Advanced options</div>
                 <div class="advanced-content-wrapper">
                     <div class="advanced-content">
+                        <label>
+                            Image/Text margin
+                            <input type="number" id="imageMargin" min="0" value="4">
+                        </label>
                         <div class="input-group">
                             <div class="input-group-title">Margin %</div>
                             <div class="button-group">
@@ -585,18 +617,42 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script> -->
 
     <script>
+        const logoTypeRadios = document.querySelectorAll('input[name="logoType"]');
+        const textInputWrapper = document.getElementById('textLogoInputWrapper');
+        const fileInputWrapper = document.getElementById('fileLogoInputWrapper');
+
+        logoTypeRadios.forEach(radio => {
+            radio.addEventListener('change', switchInputMode);
+        });
+
+        function switchInputMode() {
+            const selectedValue = document.querySelector('input[name="logoType"]:checked').value;
+
+            if (selectedValue === 'text') {
+                textInputWrapper.style.display = 'block';
+                fileInputWrapper.style.display = 'none';
+            } else if (selectedValue === 'image') {
+                textInputWrapper.style.display = 'none';
+                fileInputWrapper.style.display = 'block';
+            } else if (selectedValue === 'none') {
+                textInputWrapper.style.display = 'none';
+                fileInputWrapper.style.display = 'none';
+            }
+        }
+
         document.querySelector('.advanced-toggle').addEventListener('click', (e) => {
             e.target.classList.toggle('active');
             const content = e.target.nextElementSibling;
             content.style.maxHeight = content.style.maxHeight ? '' : content.scrollHeight + 'px';
         });
 
+        // TODO: exclude unnecessary inputs?
         // For text and textarea (real-time input)
         document.querySelectorAll('input[type="text"], input[type="number"], textarea')
             .forEach(el => el.addEventListener('input', updateQR));
 
         // For radio and checkbox (on change)
-        document.querySelectorAll('input[type="radio"], input[type="checkbox"]')
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"], input[type="file"]')
             .forEach(el => el.addEventListener('change', updateQR));
 
         const qrCode = new QRCodeStyling({
@@ -660,6 +716,9 @@
         function updateQR() {
             const url = document.getElementById("urlInput").value;
             const text = document.getElementById("textInput").value;
+            const imageInput = document.getElementById("imageInput");
+            const logoImage = imageInput.files[0];
+
             // NOTE: margin can't be more than half of width (I would say 30% is max for normal render)
             const margin = document.querySelector('input[name="margin"]:checked').value;
             const dotStyle = document.querySelector('input[name="dot_style"]:checked').value;
@@ -673,7 +732,9 @@
             errorDiv.innerHTML = '';
             errorDiv.style.display = "none";
 
-            if (!url) {
+            const logoMode = document.querySelector('input[name="logoType"]:checked').value;
+
+            if (!url || (logoMode === "image" && !logoImage) || (logoMode === 'text' && !text)) {
                 errorDiv.innerHTML = 'Please enter valid values';
                 errorDiv.style.display = "block";
                 return;
@@ -682,8 +743,18 @@
             const fontSize = 200; // Set a fixed font size (can be dynamic too)
             // const fontSize = 20; // Set a fixed font size (can be dynamic too)
 
-            // Generate the SVG text logo with dynamic size based on text
-            const textSVG = generateTextSVG(text, fontSize);
+            let imageValue;
+
+            if (logoMode === "image") {
+                const bloLogoUrl = URL.createObjectURL(logoImage);
+                imageValue = bloLogoUrl;
+            } else if (logoMode === 'text') {
+                // Generate the SVG text logo with dynamic size based on text
+                const textSVG = generateTextSVG(text, fontSize);
+                imageValue = "data:image/svg+xml;base64," + btoa(textSVG)
+            }
+
+
 
             // Update QR code with the generated SVG as the logo
             qrCode.update({
@@ -691,8 +762,7 @@
                 shape: shape,
                 margin: margin,
                 "qrOptions": { "typeNumber": "0", "mode": "Byte", "errorCorrectionLevel": correction },
-
-                image: "data:image/svg+xml;base64," + btoa(textSVG),
+                image: imageValue,
                 imageOptions: {
                     margin: imageMargin
                 },
