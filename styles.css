@@ -1,5 +1,132 @@
+:root {
+    --elf-background-color: #fafafa;
+    --elf-primary-color: #333333;
+    --elf-secondary-color: #eeeeee;
+
+    --elf-accent-light-color: #d2caef;
+    --elf-accent-color: #8f83ed;
+    --elf-accent-text-color: #6f63cf;
+
+    --elf-neutral-light-color: #b9b9b9;
+    --elf-neutral-color: #7f7f7f;
+    --elf-neutral-text-color: #333333;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --elf-background-color: #131313;
+        --elf-primary-color: #eeeeee;
+        --elf-secondary-color: #333333;
+
+        --elf-accent-light-color: #b0e9d5;
+        --elf-accent-color: #00a97d;
+        --elf-accent-text-color: #1a9473;
+    }
+}
+
 * {
     font-family: "Quicksand", sans-serif;
     font-weight: 600;
     box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: var(--text-base);
+    padding: 20px;
+    margin: 0;
+    color: var(--elf-primary-color);
+    background-color: var(--elf-background-color);
+}
+
+a {
+    text-decoration: none;
+    color: var(--elf-accent-text-color);
+}
+
+button {
+    --elf-btn-background: var(--elf-accent-light-color);
+    --elf-btn-shadow: var(--elf-accent-color);
+    --elf-btn-color: var(--elf-accent-text-color);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-right: 4px;
+    background: var(--elf-btn-background);
+    color: var(--elf-btn-color);
+    border-radius: 6px;
+    border: none;
+    box-shadow: 4px 4px 1px 0px var(--elf-btn-shadow);
+    transition: all 0.2s;
+    outline: none;
+    text-decoration: none;
+    user-select: none;
+
+    width: 80px;
+    padding: 12px;
+    font-size: var(--text-base);
+}
+
+button:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 1px 0px var(--elf-btn-shadow);
+}
+
+button:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+}
+
+button.button-neutral {
+    --elf-btn-background: var(--elf-neutral-light-color);
+    --elf-btn-shadow: var(--elf-neutral-color);
+    --elf-btn-color: var(--elf-neutral-text-color);
+}
+
+.qr-code-preview {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-4);
+    max-width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 99999;
+    background: var(--elf-background-color);
+    width: 100%;
+    box-shadow: 0px 4px 10px var(--elf-background-color);
+    padding: 16px;
+    align-items: center;
+}
+
+.qr-code-container {
+    width: 300px;
+    max-width: 100%;
+    border-radius: 12px;
+    padding: 16px;
+    background-color: var(--elf-accent-light-color);
+}
+
+.qr-code-container > * {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    display: block;
+}
+
+.qr-code-params {
+    display: flex;
+    justify-content: center;
+    background-color: var(--elf-secondary-color);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 700px;
+
+    /* TODO: remove */
+    /* height: 2000px; */
 }

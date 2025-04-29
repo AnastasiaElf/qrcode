@@ -11,13 +11,30 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Pacifico&family=Quicksand:wght@300..700&family=Tagesschrift&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="utils.css">
     <link rel="stylesheet" href="styles.css">
     <title>Give me QR Code!</title>
 </head>
 
 <body>
-    Clean pipsh
+    <span class="text-xl">QR Code Generator</span>
+    <div class="qr-code-preview flex-col md:flex-row">
+        <div class="flex flex-row md:flex-col gap-4 flex-wrap justify-center">
+            <button onclick="downloadQR('svg')">SVG</button>
+            <button onclick="downloadQR('png')">PNG</button>
+        </div>
+        <div class="max-w-full">
+            <div class="qr-code-container" id="qrcode"></div>
+        </div>
+        <div class="flex flex-row md:flex-col gap-4 flex-wrap justify-center">
+            <button onclick="downloadQR('jpeg')">JPEG</button>
+            <button onclick="downloadQR('webp')">WEBP</button>
+        </div>
+    </div>
+    <div class="qr-code-params">Params</div>
+    <span>Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a></span>
 
+    <script src="qr-code-styling-custom.js"></script>
     <script src="script.js"></script>
 </body>
 
