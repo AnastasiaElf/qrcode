@@ -3,6 +3,8 @@
     --elf-primary-color: #333333;
     --elf-secondary-color: #eeeeee;
 
+    --elf-border-color: #b9b9b9;
+
     --elf-accent-light-color: #d2caef;
     --elf-accent-color: #8f83ed;
     --elf-accent-text-color: #6f63cf;
@@ -21,6 +23,8 @@
         --elf-accent-light-color: #b0e9d5;
         --elf-accent-color: #00a97d;
         --elf-accent-text-color: #1a9473;
+
+        --elf-border-color: #7f7f7f;
     }
 }
 
@@ -87,6 +91,17 @@ button.button-neutral {
     --elf-btn-color: var(--elf-neutral-text-color);
 }
 
+input,
+textarea {
+    max-width: 100%;
+    padding: 10px;
+    border: 1px solid var(--elf-border-color);
+    border-radius: 6px;
+    outline-color: var(--elf-accent-light-color);
+    background: var(--elf-background-color);
+    color: var(--elf-primary-color);
+}
+
 .qr-code-preview {
     display: flex;
     justify-content: center;
@@ -120,13 +135,12 @@ button.button-neutral {
 .qr-code-params {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    gap: var(--gap-4);
     background-color: var(--elf-secondary-color);
     border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
     margin-top: 10px;
     width: 100%;
     max-width: 700px;
-
-    /* TODO: remove */
-    /* height: 2000px; */
 }

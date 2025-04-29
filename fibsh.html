@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <span class="text-xl">QR Code Generator</span>
+    <div class="text-xl">QR Code Generator</div>
     <div class="qr-code-preview flex-col md:flex-row">
         <div class="flex flex-row md:flex-col gap-4 flex-wrap justify-center">
             <button onclick="downloadQR('svg')">SVG</button>
@@ -31,8 +31,11 @@
             <button onclick="downloadQR('webp')">WEBP</button>
         </div>
     </div>
-    <div class="qr-code-params">Params</div>
-    <span>Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a></span>
+    <div class="qr-code-params">
+        <input type="text" placeholder="Paste your link here" />
+        <textarea placeholder='"Click Me!"'></textarea>
+    </div>
+    <div style="margin-top: 26px;">Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a></div>
 
     <script src="qr-code-styling-custom.js"></script>
     <script src="script.js"></script>
