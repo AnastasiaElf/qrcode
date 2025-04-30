@@ -1,6 +1,6 @@
 const default_size = 2000;
 const url_placeholder = "Paste your link here";
-const logo_text_placeholder = '"Scan Me!"';
+const logo_text_placeholder = "Scan Me!";
 const logo_image_placeholder = "images/logo_placeholder.webp";
 
 const textConfig = {
@@ -59,7 +59,9 @@ function downloadQR(extension) {
 
 function updateQR() {
     let url = document.getElementById("input_url").value;
-    let logo_text = document.getElementById("input_logo_text").value;
+    const logoType = document.querySelector('input[name="input_logo_type"]:checked').value;
+    let logoText = document.getElementById("input_logo_text").value;
+    let logoImage = document.getElementById("input_logo_image").files[0];
     const shape = document.querySelector('input[name="input_shape"]:checked').value;
     const dotStyle = document.querySelector('input[name="input_dot_style"]:checked').value;
     const cornerSquareStyle = document.querySelector('input[name="input_corner_square_shape"]:checked').value;
@@ -69,7 +71,21 @@ function updateQR() {
     const errorCorrectionLevel = document.querySelector('input[name="input_error_correction"]:checked').value;
 
     if (!url) url = url_placeholder;
-    if (!logo_text) logo_text = logo_text_placeholder;
+
+    let logo = null;
+
+    switch (logoType) {
+        case "image":
+            logo = logoImage ? getLogoImage(logoImage) : logo_image_placeholder;
+            break;
+
+        case "text":
+            logo = getTextLogoImage(logoText || logo_text_placeholder);
+            break;
+
+        default:
+            break;
+    }
 
     qrCode.update({
         data: url,
@@ -84,6 +100,7 @@ function updateQR() {
         cornersDotOptions: {
             type: cornerDotStyle,
         },
+        image: logo,
         imageOptions: {
             margin: (imageMargin / 100) * default_size,
             imageSize: 0.5,
@@ -92,6 +109,53 @@ function updateQR() {
             errorCorrectionLevel: errorCorrectionLevel,
         },
     });
+}
+
+function getTextLogoImage(text) {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const fontSize = 200;
+
+    ctx.font = `${fontSize}px Quicksand`;
+
+    // Split text into lines based on the new line character
+    const lines = text.split("\n");
+    const lineHeight = fontSize * 1.2; // Line spacing
+    const maxLineWidth = Math.max(...lines.map((line) => ctx.measureText(line).width));
+
+    const textHeight = lineHeight * lines.length; // Total height for all lines
+
+    // Create SVG with the calculated size
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("width", maxLineWidth + 10); // Add padding
+    svg.setAttribute("height", textHeight + 10); // Add padding
+    svg.setAttribute("viewBox", `0 0 ${maxLineWidth + 10} ${textHeight + 10}`);
+
+    // Calculate starting Y position to center the text vertically
+    const startY = (textHeight + 10) / 2 - textHeight / 2;
+
+    // Create text elements for each line
+    lines.forEach((line, index) => {
+        const textElem = document.createElementNS(svgNS, "text");
+        textElem.setAttribute("x", "50%");
+        textElem.setAttribute("y", startY + lineHeight * index + fontSize); // Adjust vertical positioning
+        textElem.setAttribute("font-family", "Quicksand");
+        textElem.setAttribute("text-anchor", "middle");
+        textElem.setAttribute("font-size", fontSize);
+        textElem.setAttribute("font-weight", "600");
+        textElem.setAttribute("fill", "#000");
+        textElem.textContent = line;
+
+        // Append text element to SVG
+        svg.appendChild(textElem);
+    });
+
+    return "data:image/svg+xml;base64," + btoa(new XMLSerializer().serializeToString(svg));
+}
+
+function getLogoImage(url) {
+    return URL.createObjectURL(url);
 }
 
 function updateLogoInputVisibility(selected) {
@@ -166,6 +230,10 @@ function setupRadioInputs(config) {
     }
 }
 
+function setupFileInputs() {
+    document.querySelectorAll('input[type="file"]').forEach((el) => el.addEventListener("change", updateQR));
+}
+
 function setupAdvancedParamsCollapse() {
     document.querySelector(".advanced-params-toggle").addEventListener("click", (e) => {
         e.target.classList.toggle("active");
@@ -176,7 +244,9 @@ function setupAdvancedParamsCollapse() {
 
 function getInitialValues() {
     const url = textConfig.input_url.defaultValue || url_placeholder;
-    const logo_text = textareaConfig.input_logo_text.defaultValue || logo_text_placeholder;
+    const logoType = radioConfig.input_logo_type.defaultValue;
+    const logoText = textareaConfig.input_logo_text.defaultValue || logo_text_placeholder;
+    const logoImage = logo_image_placeholder;
     const shape = radioConfig.input_shape.defaultValue;
     const dotStyle = radioConfig.input_dot_style.defaultValue;
     const cornerSquareStyle = radioConfig.input_corner_square_shape.defaultValue;
@@ -187,7 +257,9 @@ function getInitialValues() {
 
     return {
         url,
-        logo_text,
+        logoType,
+        logoText,
+        logoImage,
         shape,
         dotStyle,
         cornerSquareStyle,
@@ -201,7 +273,9 @@ function getInitialValues() {
 function initQRCode() {
     const {
         url,
-        logo_text,
+        logoType,
+        logoText,
+        logoImage,
         shape,
         dotStyle,
         cornerSquareStyle,
@@ -210,6 +284,12 @@ function initQRCode() {
         imageMargin,
         errorCorrectionLevel,
     } = getInitialValues();
+
+    let logo = null;
+
+    if (logoType) {
+        logo = logoType === "image" ? logoImage : getTextLogoImage(logoText);
+    }
 
     qrCode = new QRCodeStyling({
         width: default_size,
@@ -230,7 +310,7 @@ function initQRCode() {
         cornersDotOptions: {
             type: cornerDotStyle,
         },
-        image: logo_image_placeholder,
+        image: logo,
         imageOptions: {
             margin: (imageMargin / 100) * default_size,
             imageSize: 0.5,
@@ -247,6 +327,7 @@ function initApp() {
     setupTextInputs(textConfig);
     setupTextareaInputs(textareaConfig);
     setupRadioInputs(radioConfig);
+    setupFileInputs();
     setupAdvancedParamsCollapse();
     initQRCode();
 }
