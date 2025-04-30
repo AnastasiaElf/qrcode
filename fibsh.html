@@ -32,8 +32,19 @@
         </div>
     </div>
     <div class="qr-code-params">
-        <input type="text" placeholder="Paste your link here" />
-        <textarea placeholder='"Click Me!"'></textarea>
+        <input id="input_url" type="text" />
+        <textarea id="input_logo_text"></textarea>
+        <div class="radio-button-group">
+            <label class="radio-button">
+                <input type="radio" name="input_shape" value="square">
+                <img class="radio-image" src="/images/shape_square.png" />
+            </label>
+            <label class="radio-button" style="padding: 4px;">
+                <input type="radio" name="input_shape" value="circle">
+                <img class="radio-image" src="/images/shape_circle.png" style="width: 44px;" />
+            </label>
+        </div>
+    </div>
     </div>
     <div style="margin-top: 26px;">Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a></div>
 

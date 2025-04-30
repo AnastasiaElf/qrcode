@@ -26,6 +26,10 @@
 
         --elf-border-color: #7f7f7f;
     }
+
+    .radio-button img {
+        filter: invert(1);
+    }
 }
 
 * {
@@ -100,6 +104,35 @@ textarea {
     outline-color: var(--elf-accent-light-color);
     background: var(--elf-background-color);
     color: var(--elf-primary-color);
+}
+
+.radio-button {
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+
+    border: 2px solid var(--elf-border-color);
+    outline-color: var(--elf-accent-light-color);
+    background: var(--elf-background-color);
+    color: var(--elf-primary-color);
+}
+
+.radio-button input {
+    display: none;
+}
+
+.radio-button:has(input:checked) {
+    border-color: var(--elf-accent-text-color);
+}
+
+.radio-button img {
+    display: block;
+    width: 40px;
+}
+
+.radio-button-group {
+    display: flex;
+    gap: var(--gap-2);
 }
 
 .qr-code-preview {
