@@ -7,30 +7,35 @@ const logo_image_placeholder = "images/logo_placeholder.webp";
 
 const textConfig = {
     input_url: {
-        default: "",
+        defaultValue: "",
         placeholder: url_placeholder,
     },
 };
 
 const textareaConfig = {
     input_logo_text: {
-        default: "",
+        defaultValue: "",
         placeholder: logo_text_placeholder,
     },
 };
 
 const radioConfig = {
     input_shape: {
-        default: "square",
+        defaultValue: "square",
     },
     input_dot_style: {
-        default: "rounded",
+        defaultValue: "rounded",
     },
     input_corner_square_shape: {
-        default: "rounded",
+        defaultValue: "rounded",
     },
     input_corner_dot_shape: {
-        default: "rounded",
+        defaultValue: "rounded",
+    },
+    input_logo_type: {
+        defaultValue: "text",
+        onSetup: setupLogoTypeInputs,
+        onChange: handleLogoTypeChange,
     },
 };
 
@@ -71,6 +76,38 @@ function updateQR() {
     });
 }
 
+function updateLogoInputVisibility(selected) {
+    const textInput = document.getElementById("input_logo_text");
+    const imageInput = document.getElementById("input_logo_image");
+
+    switch (selected) {
+        case "no_logo":
+            textInput.style.display = "none";
+            imageInput.style.display = "none";
+            break;
+        case "text":
+            textInput.style.display = "block";
+            imageInput.style.display = "none";
+            break;
+        case "image":
+            textInput.style.display = "none";
+            imageInput.style.display = "block";
+            break;
+        default:
+            break;
+    }
+}
+
+function handleLogoTypeChange() {
+    const selected = document.querySelector('input[name="input_logo_type"]:checked').value;
+    updateLogoInputVisibility(selected);
+    updateQR();
+}
+
+function setupLogoTypeInputs() {
+    updateLogoInputVisibility(radioConfig.input_logo_type.defaultValue);
+}
+
 function setupTextInputs(config) {
     for (const key in config) {
         const elem = document.getElementById(key);
@@ -78,8 +115,9 @@ function setupTextInputs(config) {
 
         const params = config[key];
         if (params.placeholder) elem.placeholder = params.placeholder;
-        elem.value = params.default;
-        elem.oninput = updateQR;
+        elem.value = params.defaultValue;
+        elem.oninput = config.onChange || updateQR;
+        if (params.onSetup) onSetup(params);
     }
 }
 
@@ -90,30 +128,33 @@ function setupTextareaInputs(config) {
 
         const params = config[key];
         if (params.placeholder) elem.placeholder = params.placeholder;
-        elem.value = params.default;
-        elem.oninput = updateQR;
+        elem.value = params.defaultValue;
+        elem.oninput = config.onChange || updateQR;
+        if (params.onSetup) onSetup(params);
     }
 }
 
 function setupRadioInputs(config) {
     for (const key in config) {
         const radios = document.querySelectorAll(`input[name="${key}"]`);
+        const params = config[key];
         radios.forEach((radio) => {
-            if (radio.value === config[key].default) {
+            if (radio.value === params.defaultValue) {
                 radio.checked = true;
             }
-            radio.onchange = updateQR;
+            radio.onchange = params.onChange || updateQR;
         });
+        if (params.onSetup) params.onSetup();
     }
 }
 
 function getInitialValues() {
-    const url = textConfig.input_url.default || url_placeholder;
-    const logo_text = textareaConfig.input_logo_text.default || logo_text_placeholder;
-    const shape = radioConfig.input_shape.default;
-    const dotStyle = radioConfig.input_dot_style.default;
-    const cornerSquareStyle = radioConfig.input_corner_square_shape.default;
-    const cornerDotStyle = radioConfig.input_corner_dot_shape.default;
+    const url = textConfig.input_url.defaultValue || url_placeholder;
+    const logo_text = textareaConfig.input_logo_text.defaultValue || logo_text_placeholder;
+    const shape = radioConfig.input_shape.defaultValue;
+    const dotStyle = radioConfig.input_dot_style.defaultValue;
+    const cornerSquareStyle = radioConfig.input_corner_square_shape.defaultValue;
+    const cornerDotStyle = radioConfig.input_corner_dot_shape.defaultValue;
 
     return { url, logo_text, shape, dotStyle, cornerSquareStyle, cornerDotStyle };
 }

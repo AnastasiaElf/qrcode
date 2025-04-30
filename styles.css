@@ -12,6 +12,7 @@
     --elf-neutral-text-color: #333333;
 
     --elf-input-border-color: #b9b9b9;
+    --elf-input-background: #ffffff;
     --elf-radio-button-background: #ffffff;
 }
 
@@ -26,6 +27,7 @@
         --elf-accent-text-color: #1a9473;
 
         --elf-input-border-color: #7f7f7f;
+        --elf-input-background: #414141;
         --elf-radio-button-background: #414141;
     }
 
@@ -97,15 +99,55 @@ button.button-neutral {
     --elf-btn-color: var(--elf-neutral-text-color);
 }
 
-input,
+.param-label {
+    font-size: var(--text-sm);
+}
+
+input[type="text"],
 textarea {
-    max-width: 100%;
+    width: 100%;
+    max-width: 350px;
     padding: 10px;
     border: 1px solid var(--elf-input-border-color);
     border-radius: 6px;
     outline-color: var(--elf-accent-light-color);
-    background: var(--elf-background-color);
+    background: var(--elf-input-background);
     color: var(--elf-primary-color);
+    text-align: center;
+}
+
+textarea {
+    min-height: 60px;
+    resize: vertical;
+}
+
+input[type="file"] {
+    padding: 10px;
+}
+
+input[type="file"]::file-selector-button {
+    border: none;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 600;
+    background: var(--elf-neutral-light-color);
+    color: var(--elf-neutral-text-color);
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.param-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--gap-2);
+    padding: 10px;
+    border-radius: 6px;
+    background: var(--elf-background-color);
+    justify-content: center;
 }
 
 .radio-button {
@@ -135,9 +177,6 @@ textarea {
     justify-content: center;
     flex-wrap: wrap;
     gap: var(--gap-2);
-    padding: 10px;
-    background: var(--elf-background-color);
-    border-radius: 8px;
     width: 100%;
 }
 
@@ -157,7 +196,7 @@ textarea {
 }
 
 .qr-code-container {
-    width: 300px;
+    width: 200px;
     max-width: 100%;
     border-radius: 12px;
     padding: 16px;
@@ -182,4 +221,10 @@ textarea {
     margin-top: 10px;
     width: 100%;
     max-width: 700px;
+}
+
+@media (min-width: 768px) {
+    .qr-code-container {
+        width: 300px;
+    }
 }

@@ -32,107 +32,140 @@
         </div>
     </div>
     <div class="qr-code-params">
-        <input id="input_url" type="text" />
-        <textarea id="input_logo_text"></textarea>
-        <div class="radio-button-group">
-            <label class="radio-button">
-                <input type="radio" name="input_shape" value="square">
-                <img src="/images/shape_square.png" />
-            </label>
-            <label class="radio-button" style="padding: 4px;">
-                <input type="radio" name="input_shape" value="circle">
-                <img src="/images/shape_circle.png" style="width: 44px;" />
-            </label>
-        </div>
-        <div class="radio-button-group">
-            <label class="radio-button">
-                <input type="radio" name="input_dot_style" value="square">
-                <img src="/images/dot_square.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_dot_style" value="rounded">
-                <img src="/images/dot_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_dot_style" value="extra-rounded">
-                <img src="/images/dot_extra_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_dot_style" value="dots">
-                <img src="/images/dot_dots.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_dot_style" value="classy">
-                <img src="/images/dot_classy.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_dot_style" value="classy-rounded">
-                <img src="/images/dot_classy_rounded.png" />
-            </label>
-        </div>
-        <div class="radio-button-group">
-            <label class="radio-button">
-                <input type="radio" name="input_corner_square_shape" value="square">
-                <img src="/images/corner_square_square.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_square_shape" value="rounded">
-                <img src="/images/corner_square_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_square_shape" value="extra-rounded">
-                <img src="/images/corner_square_extra_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_square_shape" value="dot">
-                <img src="/images/corner_square_dot.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_square_shape" value="classy">
-                <img src="/images/corner_square_classy.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_square_shape" value="classy-rounded">
-                <img src="/images/corner_square_classy_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_square_shape" value="dots">
-                <img src="/images/corner_square_dots.png" />
-            </label>
+        <div class="param-group">
+            <label class="param-label" for="input_url">Link</label>
+            <input id="input_url" type="text" />
         </div>
 
-        <div class="radio-button-group">
-            <label class="radio-button">
-                <input type="radio" name="input_corner_dot_shape" value="square">
-                <img src="/images/corner_dot_square.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_dot_shape" value="rounded">
-                <img src="/images/corner_dot_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_dot_shape" value="extra-rounded">
-                <img src="/images/corner_dot_extra_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_dot_shape" value="dot">
-                <img src="/images/corner_dot_dot.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_dot_shape" value="classy">
-                <img src="/images/corner_dot_classy.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_dot_shape" value="classy-rounded">
-                <img src="/images/corner_dot_classy_rounded.png" />
-            </label>
-            <label class="radio-button">
-                <input type="radio" name="input_corner_dot_shape" value="dots">
-                <img src="/images/corner_dot_dots.png" />
-            </label>
+        <div class="param-group">
+            <div class="radio-button-group" style="font-size: var(--text-sm);">
+                <label class="radio-button">
+                    <input type="radio" name="input_logo_type" value="no_logo">
+                    No logo
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_logo_type" value="text">
+                    Text
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_logo_type" value="image">
+                    Image
+                </label>
+            </div>
+            <textarea id="input_logo_text"></textarea>
+            <input type="file" id="input_logo_image" accept="image/*">
+        </div>
+
+        <div class="param-group">
+            <div class="radio-button-group">
+                <label class="radio-button">
+                    <input type="radio" name="input_shape" value="square">
+                    <img src="/images/shape_square.png" />
+                </label>
+                <label class="radio-button" style="padding: 4px;">
+                    <input type="radio" name="input_shape" value="circle">
+                    <img src="/images/shape_circle.png" style="width: 44px;" />
+                </label>
+            </div>
+        </div>
+
+        <div class="param-group">
+            <div class="radio-button-group">
+                <label class="radio-button">
+                    <input type="radio" name="input_dot_style" value="square">
+                    <img src="/images/dot_square.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_dot_style" value="rounded">
+                    <img src="/images/dot_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_dot_style" value="extra-rounded">
+                    <img src="/images/dot_extra_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_dot_style" value="dots">
+                    <img src="/images/dot_dots.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_dot_style" value="classy">
+                    <img src="/images/dot_classy.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_dot_style" value="classy-rounded">
+                    <img src="/images/dot_classy_rounded.png" />
+                </label>
+            </div>
+        </div>
+
+        <div class="param-group">
+            <div class="radio-button-group">
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_square_shape" value="square">
+                    <img src="/images/corner_square_square.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_square_shape" value="rounded">
+                    <img src="/images/corner_square_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_square_shape" value="extra-rounded">
+                    <img src="/images/corner_square_extra_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_square_shape" value="dot">
+                    <img src="/images/corner_square_dot.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_square_shape" value="classy">
+                    <img src="/images/corner_square_classy.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_square_shape" value="classy-rounded">
+                    <img src="/images/corner_square_classy_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_square_shape" value="dots">
+                    <img src="/images/corner_square_dots.png" />
+                </label>
+            </div>
+        </div>
+
+        <div class="param-group">
+            <div class="radio-button-group">
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_dot_shape" value="square">
+                    <img src="/images/corner_dot_square.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_dot_shape" value="rounded">
+                    <img src="/images/corner_dot_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_dot_shape" value="extra-rounded">
+                    <img src="/images/corner_dot_extra_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_dot_shape" value="dot">
+                    <img src="/images/corner_dot_dot.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_dot_shape" value="classy">
+                    <img src="/images/corner_dot_classy.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_dot_shape" value="classy-rounded">
+                    <img src="/images/corner_dot_classy_rounded.png" />
+                </label>
+                <label class="radio-button">
+                    <input type="radio" name="input_corner_dot_shape" value="dots">
+                    <img src="/images/corner_dot_dots.png" />
+                </label>
+            </div>
         </div>
     </div>
-    <div style="margin-top: 26px;">Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a></div>
+    <div style="margin-top: 26px;">Created by <a href="https://anastasiaelf.com/" target="_blank">AnastasiaElf</a>
+    </div>
 
     <script src="qr-code-styling-custom.js"></script>
     <script src="script.js"></script>
