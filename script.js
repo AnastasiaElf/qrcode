@@ -41,6 +41,9 @@ const radioConfig = {
     input_logo_margin: {
         defaultValue: "2",
     },
+    input_error_correction: {
+        defaultValue: "Q",
+    },
 };
 
 let qrCode;
@@ -61,8 +64,9 @@ function updateQR() {
     const dotStyle = document.querySelector('input[name="input_dot_style"]:checked').value;
     const cornerSquareStyle = document.querySelector('input[name="input_corner_square_shape"]:checked').value;
     const cornerDotStyle = document.querySelector('input[name="input_corner_dot_shape"]:checked').value;
-    let margin = parseInt(document.querySelector('input[name="input_margin"]:checked').value);
-    let imageMargin = parseInt(document.querySelector('input[name="input_logo_margin"]:checked').value);
+    const margin = parseInt(document.querySelector('input[name="input_margin"]:checked').value);
+    const imageMargin = parseInt(document.querySelector('input[name="input_logo_margin"]:checked').value);
+    const errorCorrectionLevel = document.querySelector('input[name="input_error_correction"]:checked').value;
 
     if (!url) url = url_placeholder;
     if (!logo_text) logo_text = logo_text_placeholder;
@@ -83,6 +87,9 @@ function updateQR() {
         imageOptions: {
             margin: (imageMargin / 100) * default_size,
             imageSize: 0.5,
+        },
+        qrOptions: {
+            errorCorrectionLevel: errorCorrectionLevel,
         },
     });
 }
@@ -176,13 +183,33 @@ function getInitialValues() {
     const cornerDotStyle = radioConfig.input_corner_dot_shape.defaultValue;
     const margin = radioConfig.input_margin.defaultValue;
     const imageMargin = radioConfig.input_logo_margin.defaultValue;
+    const errorCorrectionLevel = radioConfig.input_error_correction.defaultValue;
 
-    return { url, logo_text, shape, dotStyle, cornerSquareStyle, cornerDotStyle, margin, imageMargin };
+    return {
+        url,
+        logo_text,
+        shape,
+        dotStyle,
+        cornerSquareStyle,
+        cornerDotStyle,
+        margin,
+        imageMargin,
+        errorCorrectionLevel,
+    };
 }
 
 function initQRCode() {
-    const { url, logo_text, shape, dotStyle, cornerSquareStyle, cornerDotStyle, margin, imageMargin } =
-        getInitialValues();
+    const {
+        url,
+        logo_text,
+        shape,
+        dotStyle,
+        cornerSquareStyle,
+        cornerDotStyle,
+        margin,
+        imageMargin,
+        errorCorrectionLevel,
+    } = getInitialValues();
 
     qrCode = new QRCodeStyling({
         width: default_size,
@@ -207,6 +234,9 @@ function initQRCode() {
         imageOptions: {
             margin: (imageMargin / 100) * default_size,
             imageSize: 0.5,
+        },
+        qrOptions: {
+            errorCorrectionLevel: errorCorrectionLevel,
         },
     });
 
