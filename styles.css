@@ -104,6 +104,7 @@ button.button-neutral {
 }
 
 input[type="text"],
+input[type="number"],
 textarea {
     width: 100%;
     max-width: 350px;
@@ -221,6 +222,41 @@ input[type="file"]::file-selector-button {
     margin-top: 10px;
     width: 100%;
     max-width: 700px;
+}
+
+.advanced-settings {
+    width: 100%;
+}
+
+.advanced-params-toggle {
+    cursor: pointer;
+    position: relative;
+}
+
+.advanced-params-toggle:after {
+    content: "\2335";
+    font-weight: bold;
+    transition: transform 0.3s;
+    right: 4px;
+    position: absolute;
+}
+
+.advanced-params-toggle.active:after {
+    transform: scale(-1, -1);
+}
+
+.advanced-params-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.advanced-params {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
 }
 
 @media (min-width: 768px) {
