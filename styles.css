@@ -3,8 +3,6 @@
     --elf-primary-color: #333333;
     --elf-secondary-color: #eeeeee;
 
-    --elf-border-color: #b9b9b9;
-
     --elf-accent-light-color: #d2caef;
     --elf-accent-color: #8f83ed;
     --elf-accent-text-color: #6f63cf;
@@ -12,6 +10,9 @@
     --elf-neutral-light-color: #b9b9b9;
     --elf-neutral-color: #7f7f7f;
     --elf-neutral-text-color: #333333;
+
+    --elf-input-border-color: #b9b9b9;
+    --elf-radio-button-background: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,7 +25,8 @@
         --elf-accent-color: #00a97d;
         --elf-accent-text-color: #1a9473;
 
-        --elf-border-color: #7f7f7f;
+        --elf-input-border-color: #7f7f7f;
+        --elf-radio-button-background: #414141;
     }
 
     .radio-button img {
@@ -99,7 +101,7 @@ input,
 textarea {
     max-width: 100%;
     padding: 10px;
-    border: 1px solid var(--elf-border-color);
+    border: 1px solid var(--elf-input-border-color);
     border-radius: 6px;
     outline-color: var(--elf-accent-light-color);
     background: var(--elf-background-color);
@@ -110,10 +112,8 @@ textarea {
     padding: 6px;
     border-radius: 6px;
     cursor: pointer;
-
-    border: 2px solid var(--elf-border-color);
-    outline-color: var(--elf-accent-light-color);
-    background: var(--elf-background-color);
+    border: 3px solid var(--elf-secondary-color);
+    background: var(--elf-radio-button-background);
     color: var(--elf-primary-color);
 }
 
@@ -132,7 +132,13 @@ textarea {
 
 .radio-button-group {
     display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: var(--gap-2);
+    padding: 10px;
+    background: var(--elf-background-color);
+    border-radius: 8px;
+    width: 100%;
 }
 
 .qr-code-preview {

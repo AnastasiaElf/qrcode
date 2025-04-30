@@ -23,6 +23,15 @@ const radioConfig = {
     input_shape: {
         default: "square",
     },
+    input_dot_style: {
+        default: "rounded",
+    },
+    input_corner_square_shape: {
+        default: "rounded",
+    },
+    input_corner_dot_shape: {
+        default: "rounded",
+    },
 };
 
 let qrCode;
@@ -40,6 +49,9 @@ function updateQR() {
     let url = document.getElementById("input_url").value;
     let logo_text = document.getElementById("input_logo_text").value;
     const shape = document.querySelector('input[name="input_shape"]:checked').value;
+    const dotStyle = document.querySelector('input[name="input_dot_style"]:checked').value;
+    const cornerSquareStyle = document.querySelector('input[name="input_corner_square_shape"]:checked').value;
+    const cornerDotStyle = document.querySelector('input[name="input_corner_dot_shape"]:checked').value;
 
     if (!url) url = url_placeholder;
     if (!logo_text) logo_text = logo_text_placeholder;
@@ -47,6 +59,15 @@ function updateQR() {
     qrCode.update({
         data: url,
         shape: shape,
+        dotsOptions: {
+            type: dotStyle,
+        },
+        cornersSquareOptions: {
+            type: cornerSquareStyle,
+        },
+        cornersDotOptions: {
+            type: cornerDotStyle,
+        },
     });
 }
 
@@ -90,12 +111,15 @@ function getInitialValues() {
     const url = textConfig.input_url.default || url_placeholder;
     const logo_text = textareaConfig.input_logo_text.default || logo_text_placeholder;
     const shape = radioConfig.input_shape.default;
+    const dotStyle = radioConfig.input_dot_style.default;
+    const cornerSquareStyle = radioConfig.input_corner_square_shape.default;
+    const cornerDotStyle = radioConfig.input_corner_dot_shape.default;
 
-    return { url, logo_text, shape };
+    return { url, logo_text, shape, dotStyle, cornerSquareStyle, cornerDotStyle };
 }
 
 function initQRCode() {
-    const { url, logo_text, shape } = getInitialValues();
+    const { url, logo_text, shape, dotStyle, cornerSquareStyle, cornerDotStyle } = getInitialValues();
 
     qrCode = new QRCodeStyling({
         width: default_size,
@@ -109,7 +133,13 @@ function initQRCode() {
             color: null,
         },
         dotsOptions: {
-            type: "rounded",
+            type: dotStyle,
+        },
+        cornersSquareOptions: {
+            type: cornerSquareStyle,
+        },
+        cornersDotOptions: {
+            type: cornerDotStyle,
         },
         imageOptions: {
             margin: (default_logo_margin_percent / 100) * default_size,
