@@ -35,22 +35,11 @@ const radioConfig = {
         onSetup: setupLogoTypeInputs,
         onChange: handleLogoTypeChange,
     },
-};
-
-const numberConfig = {
     input_margin: {
-        defaultValue: 3,
-        step: 1,
-        min: 0,
-        max: 10,
-        placeholder: "No margin",
+        defaultValue: "3",
     },
     input_logo_margin: {
-        defaultValue: 2,
-        step: 1,
-        min: 0,
-        max: 5,
-        placeholder: "No margin",
+        defaultValue: "2",
     },
 };
 
@@ -72,13 +61,11 @@ function updateQR() {
     const dotStyle = document.querySelector('input[name="input_dot_style"]:checked').value;
     const cornerSquareStyle = document.querySelector('input[name="input_corner_square_shape"]:checked').value;
     const cornerDotStyle = document.querySelector('input[name="input_corner_dot_shape"]:checked').value;
-    let margin = parseInt(document.getElementById("input_margin").value);
-    let imageMargin = parseInt(document.getElementById("input_logo_margin").value);
+    let margin = parseInt(document.querySelector('input[name="input_margin"]:checked').value);
+    let imageMargin = parseInt(document.querySelector('input[name="input_logo_margin"]:checked').value);
 
     if (!url) url = url_placeholder;
     if (!logo_text) logo_text = logo_text_placeholder;
-    if (!margin) margin = 0;
-    if (!imageMargin) imageMargin = 0;
 
     qrCode.update({
         data: url,
@@ -172,32 +159,6 @@ function setupRadioInputs(config) {
     }
 }
 
-function setupNumberInputs(config) {
-    for (const key in config) {
-        const elem = document.getElementById(key);
-        if (!elem || elem.type !== "number") continue;
-
-        const params = config[key];
-        if ("min" in params) elem.min = params.min;
-        if ("max" in params) elem.max = params.max;
-        if ("step" in params) elem.step = params.step;
-        if ("placeholder" in params) elem.placeholder = params.placeholder;
-        if ("defaultValue" in params) elem.value = params.defaultValue;
-
-        elem.oninput =
-            config.onChange ||
-            (() => {
-                let value = parseInt(elem.value);
-                if (value && (value < params.min || value > params.max)) {
-                    // TODO: error message
-                } else {
-                    updateQR();
-                }
-            });
-        if (params.onSetup) params.onSetup(elem, params);
-    }
-}
-
 function setupAdvancedParamsCollapse() {
     document.querySelector(".advanced-params-toggle").addEventListener("click", (e) => {
         e.target.classList.toggle("active");
@@ -213,8 +174,8 @@ function getInitialValues() {
     const dotStyle = radioConfig.input_dot_style.defaultValue;
     const cornerSquareStyle = radioConfig.input_corner_square_shape.defaultValue;
     const cornerDotStyle = radioConfig.input_corner_dot_shape.defaultValue;
-    const margin = numberConfig.input_margin.defaultValue;
-    const imageMargin = numberConfig.input_logo_margin.defaultValue;
+    const margin = radioConfig.input_margin.defaultValue;
+    const imageMargin = radioConfig.input_logo_margin.defaultValue;
 
     return { url, logo_text, shape, dotStyle, cornerSquareStyle, cornerDotStyle, margin, imageMargin };
 }
@@ -256,7 +217,6 @@ function initApp() {
     setupTextInputs(textConfig);
     setupTextareaInputs(textareaConfig);
     setupRadioInputs(radioConfig);
-    setupNumberInputs(numberConfig);
     setupAdvancedParamsCollapse();
     initQRCode();
 }
