@@ -1,6 +1,8 @@
 const url_placeholder = "Paste your link here";
 const logo_text_placeholder = "Scan Me!";
 const logo_image_placeholder = "./images/logo_placeholder.png";
+const margin_step = 5;
+const logo_margin_step = 2;
 
 const textConfig = {
     input_url: {
@@ -35,10 +37,10 @@ const radioConfig = {
         onChange: handleLogoTypeChange,
     },
     input_margin: {
-        defaultValue: "3",
+        defaultValue: "2",
     },
     input_logo_margin: {
-        defaultValue: "2",
+        defaultValue: "1",
     },
     input_error_correction: {
         defaultValue: "Q",
@@ -89,7 +91,7 @@ function updateQR() {
     qrCode.update({
         data: url,
         shape: shape,
-        margin: margin * 10,
+        margin: margin * margin_step,
         dotsOptions: {
             type: dotStyle,
         },
@@ -101,7 +103,7 @@ function updateQR() {
         },
         image: logo,
         imageOptions: {
-            margin: imageMargin * 10,
+            margin: imageMargin * logo_margin_step,
             imageSize: 0.5,
         },
         qrOptions: {
@@ -298,7 +300,7 @@ function initQRCode() {
         type: isSafari() ? "canvas" : "svg",
         data: url,
         shape: shape,
-        margin: margin * 10,
+        margin: margin * margin_step,
         backgroundOptions: {
             color: null,
         },
@@ -314,7 +316,7 @@ function initQRCode() {
         },
         image: logo,
         imageOptions: {
-            margin: imageMargin * 10,
+            margin: imageMargin * logo_margin_step,
             imageSize: 0.5,
         },
         qrOptions: {
