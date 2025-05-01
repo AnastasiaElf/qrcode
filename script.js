@@ -1,7 +1,7 @@
 const default_size = 2000;
 const url_placeholder = "Paste your link here";
 const logo_text_placeholder = "Scan Me!";
-const logo_image_placeholder = "images/logo_placeholder.webp";
+const logo_image_placeholder = "./images/logo_placeholder.png";
 
 const textConfig = {
     input_url: {
@@ -112,46 +112,45 @@ function updateQR() {
 }
 
 function getTextLogoImage(text) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
     const fontSize = 200;
+    const lineHeight = fontSize * 1.2;
+    const padding = 10;
+    const fontFamily = "Quicksand";
+    const fontWeight = "600";
+    const fillColor = "#000000";
 
-    ctx.font = `${fontSize}px Quicksand`;
-
-    // Split text into lines based on the new line character
     const lines = text.split("\n");
-    const lineHeight = fontSize * 1.2; // Line spacing
-    const maxLineWidth = Math.max(...lines.map((line) => ctx.measureText(line).width));
 
-    const textHeight = lineHeight * lines.length; // Total height for all lines
+    // Measure max line width using temp canvas
+    const measureCanvas = document.createElement("canvas");
+    const measureCtx = measureCanvas.getContext("2d");
+    measureCtx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+    const maxLineWidth = Math.max(...lines.map((line) => measureCtx.measureText(line).width));
 
-    // Create SVG with the calculated size
-    const svgNS = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("width", maxLineWidth + 10); // Add padding
-    svg.setAttribute("height", textHeight + 10); // Add padding
-    svg.setAttribute("viewBox", `0 0 ${maxLineWidth + 10} ${textHeight + 10}`);
+    const textHeight = lines.length * lineHeight;
+    const canvasWidth = maxLineWidth + padding * 2;
+    const canvasHeight = textHeight + padding * 2;
 
-    // Calculate starting Y position to center the text vertically
-    const startY = (textHeight + 10) / 2 - textHeight / 2;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext("2d");
 
-    // Create text elements for each line
+    ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+    ctx.fillStyle = fillColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const centerX = canvasWidth / 2;
+
+    const blockStartY = (canvasHeight - textHeight) / 2;
+
     lines.forEach((line, index) => {
-        const textElem = document.createElementNS(svgNS, "text");
-        textElem.setAttribute("x", "50%");
-        textElem.setAttribute("y", startY + lineHeight * index + fontSize); // Adjust vertical positioning
-        textElem.setAttribute("font-family", "Quicksand");
-        textElem.setAttribute("text-anchor", "middle");
-        textElem.setAttribute("font-size", fontSize);
-        textElem.setAttribute("font-weight", "600");
-        textElem.setAttribute("fill", "#000");
-        textElem.textContent = line;
-
-        // Append text element to SVG
-        svg.appendChild(textElem);
+        const y = blockStartY + index * lineHeight + lineHeight / 2;
+        ctx.fillText(line, centerX, y);
     });
 
-    return "data:image/svg+xml;base64," + btoa(new XMLSerializer().serializeToString(svg));
+    return canvas.toDataURL("image/png");
 }
 
 function getLogoImage(url) {
@@ -199,7 +198,7 @@ function setupTextInputs(config) {
         if (params.placeholder) elem.placeholder = params.placeholder;
         elem.value = params.defaultValue;
         elem.oninput = config.onChange || updateQR;
-        if (params.onSetup) onSetup(params);
+        if (params.onSetup) params.onSetup(params);
     }
 }
 
@@ -212,7 +211,7 @@ function setupTextareaInputs(config) {
         if (params.placeholder) elem.placeholder = params.placeholder;
         elem.value = params.defaultValue;
         elem.oninput = config.onChange || updateQR;
-        if (params.onSetup) onSetup(params);
+        if (params.onSetup) params.onSetup(params);
     }
 }
 
@@ -303,6 +302,7 @@ function initQRCode() {
         },
         dotsOptions: {
             type: dotStyle,
+            roundSize: true,
         },
         cornersSquareOptions: {
             type: cornerSquareStyle,
@@ -318,6 +318,7 @@ function initQRCode() {
         qrOptions: {
             errorCorrectionLevel: errorCorrectionLevel,
         },
+        emptyPixelsColor: "#ffffff",
     });
 
     qrCode.append(document.getElementById("qrcode"));
