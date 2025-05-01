@@ -1,4 +1,3 @@
-const default_size = 2000;
 const url_placeholder = "Paste your link here";
 const logo_text_placeholder = "Scan Me!";
 const logo_image_placeholder = "./images/logo_placeholder.png";
@@ -90,7 +89,7 @@ function updateQR() {
     qrCode.update({
         data: url,
         shape: shape,
-        margin: (margin / 100) * default_size,
+        margin: margin * 10,
         dotsOptions: {
             type: dotStyle,
         },
@@ -102,7 +101,7 @@ function updateQR() {
         },
         image: logo,
         imageOptions: {
-            margin: (imageMargin / 100) * default_size,
+            margin: imageMargin * 10,
             imageSize: 0.5,
         },
         qrOptions: {
@@ -269,6 +268,11 @@ function getInitialValues() {
     };
 }
 
+function isSafari() {
+    const ua = navigator.userAgent;
+    return (/AppleWebKit/.test(ua) && !/Chrome/.test(ua)) || /\b(iPad|iPhone|iPod)\b/.test(ua);
+}
+
 function initQRCode() {
     const {
         url,
@@ -291,12 +295,10 @@ function initQRCode() {
     }
 
     qrCode = new QRCodeStyling({
-        width: default_size,
-        height: default_size,
-        type: "svg",
+        type: isSafari() ? "canvas" : "svg",
         data: url,
         shape: shape,
-        margin: (margin / 100) * default_size,
+        margin: margin * 10,
         backgroundOptions: {
             color: null,
         },
@@ -312,7 +314,7 @@ function initQRCode() {
         },
         image: logo,
         imageOptions: {
-            margin: (imageMargin / 100) * default_size,
+            margin: imageMargin * 10,
             imageSize: 0.5,
         },
         qrOptions: {
@@ -322,6 +324,12 @@ function initQRCode() {
     });
 
     qrCode.append(document.getElementById("qrcode"));
+
+    if (isSafari()) {
+        setTimeout(() => {
+            qrCode.update({ image: logo });
+        }, 100);
+    }
 }
 
 function initApp() {
@@ -333,4 +341,15 @@ function initApp() {
     initQRCode();
 }
 
-window.addEventListener("DOMContentLoaded", initApp);
+// window.addEventListener("DOMContentLoaded", initApp);
+window.addEventListener("DOMContentLoaded", function () {
+    // Make sure the font is fully loaded before running the app logic
+    document.fonts
+        .load("600 200px Quicksand")
+        .then(() => {
+            initApp(); // Now it's safe to call your function after the font is loaded
+        })
+        .catch((error) => {
+            console.error("Font loading failed:", error);
+        });
+});
