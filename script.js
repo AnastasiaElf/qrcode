@@ -45,6 +45,9 @@ const radioConfig = {
     input_error_correction: {
         defaultValue: "Q",
     },
+    input_scale: {
+        defaultValue: "1",
+    },
 };
 
 let qrCode;
@@ -70,6 +73,7 @@ function updateQR() {
     const margin = parseInt(document.querySelector('input[name="input_margin"]:checked').value);
     const imageMargin = parseInt(document.querySelector('input[name="input_logo_margin"]:checked').value);
     const errorCorrectionLevel = document.querySelector('input[name="input_error_correction"]:checked').value;
+    const scale = document.querySelector('input[name="input_scale"]:checked').value;
 
     if (!url) url = url_placeholder;
 
@@ -92,6 +96,7 @@ function updateQR() {
         data: url,
         shape: shape,
         margin: margin * margin_step,
+        scale: scale,
         dotsOptions: {
             type: dotStyle,
         },
@@ -110,6 +115,13 @@ function updateQR() {
             errorCorrectionLevel: errorCorrectionLevel,
         },
     });
+
+    refreshSizeNumber();
+}
+
+function refreshSizeNumber() {
+    const sizeElem = document.getElementById("qr_size");
+    sizeElem.innerHTML = qrCode._size;
 }
 
 function getTextLogoImage(text) {
@@ -254,6 +266,7 @@ function getInitialValues() {
     const margin = radioConfig.input_margin.defaultValue;
     const imageMargin = radioConfig.input_logo_margin.defaultValue;
     const errorCorrectionLevel = radioConfig.input_error_correction.defaultValue;
+    const scale = radioConfig.input_scale.defaultValue;
 
     return {
         url,
@@ -267,6 +280,7 @@ function getInitialValues() {
         margin,
         imageMargin,
         errorCorrectionLevel,
+        scale,
     };
 }
 
@@ -288,6 +302,7 @@ function initQRCode() {
         margin,
         imageMargin,
         errorCorrectionLevel,
+        scale,
     } = getInitialValues();
 
     let logo = null;
@@ -301,6 +316,7 @@ function initQRCode() {
         data: url,
         shape: shape,
         margin: margin * margin_step,
+        scale: scale,
         backgroundOptions: {
             color: null,
         },
@@ -326,6 +342,8 @@ function initQRCode() {
     });
 
     qrCode.append(document.getElementById("qrcode"));
+
+    refreshSizeNumber();
 
     if (isSafari()) {
         setTimeout(() => {
