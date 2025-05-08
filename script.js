@@ -3,6 +3,7 @@ const logo_text_placeholder = "Scan Me!";
 const logo_image_placeholder = "./images/logo_placeholder.png";
 const margin_step = 5;
 const logo_margin_step = 2;
+const stroke_step = 0.5;
 
 const textConfig = {
     input_url: {
@@ -32,7 +33,7 @@ const radioConfig = {
         defaultValue: "rounded",
     },
     input_logo_type: {
-        defaultValue: "text",
+        defaultValue: "",
         onSetup: setupLogoTypeInputs,
         onChange: handleLogoTypeChange,
     },
@@ -116,10 +117,11 @@ function updateQR() {
         },
     });
 
-    refreshSizeNumber();
+    updateSizeNumber();
+    updateSVGStroke();
 }
 
-function refreshSizeNumber() {
+function updateSizeNumber() {
     const sizeElem = document.getElementById("qr_size");
     sizeElem.innerHTML = qrCode._size;
 }
@@ -175,10 +177,6 @@ function updateLogoInputVisibility(selected) {
     const imageInput = document.getElementById("input_logo_image");
 
     switch (selected) {
-        case "no_logo":
-            textInput.style.display = "none";
-            imageInput.style.display = "none";
-            break;
         case "text":
             textInput.style.display = "block";
             imageInput.style.display = "none";
@@ -188,6 +186,8 @@ function updateLogoInputVisibility(selected) {
             imageInput.style.display = "block";
             break;
         default:
+            textInput.style.display = "none";
+            imageInput.style.display = "none";
             break;
     }
 }
@@ -196,6 +196,11 @@ function handleLogoTypeChange() {
     const selected = document.querySelector('input[name="input_logo_type"]:checked').value;
     updateLogoInputVisibility(selected);
     updateQR();
+}
+
+function updateSVGStroke() {
+    const scale = document.querySelector('input[name="input_scale"]:checked').value;
+    document.documentElement.style.setProperty("--elf-svg-stroke-width", `${stroke_step * scale}px`);
 }
 
 function setupLogoTypeInputs() {
@@ -284,11 +289,6 @@ function getInitialValues() {
     };
 }
 
-function isSafari() {
-    const ua = navigator.userAgent;
-    return (/AppleWebKit/.test(ua) && !/Chrome/.test(ua)) || /\b(iPad|iPhone|iPod)\b/.test(ua);
-}
-
 function initQRCode() {
     const {
         url,
@@ -312,11 +312,12 @@ function initQRCode() {
     }
 
     qrCode = new QRCodeStyling({
-        type: isSafari() ? "canvas" : "svg",
+        type: "svg",
         data: url,
         shape: shape,
         margin: margin * margin_step,
         scale: scale,
+        mergePaths: false,
         backgroundOptions: {
             color: null,
         },
@@ -343,13 +344,8 @@ function initQRCode() {
 
     qrCode.append(document.getElementById("qrcode"));
 
-    refreshSizeNumber();
-
-    if (isSafari()) {
-        setTimeout(() => {
-            qrCode.update({ image: logo });
-        }, 100);
-    }
+    updateSizeNumber();
+    updateSVGStroke();
 }
 
 function initApp() {
@@ -361,15 +357,4 @@ function initApp() {
     initQRCode();
 }
 
-// window.addEventListener("DOMContentLoaded", initApp);
-window.addEventListener("DOMContentLoaded", function () {
-    // Make sure the font is fully loaded before running the app logic
-    document.fonts
-        .load("600 200px Quicksand")
-        .then(() => {
-            initApp(); // Now it's safe to call your function after the font is loaded
-        })
-        .catch((error) => {
-            console.error("Font loading failed:", error);
-        });
-});
+window.addEventListener("DOMContentLoaded", initApp);
