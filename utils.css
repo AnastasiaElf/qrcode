@@ -3,6 +3,7 @@
     --gap-0: 0rem;
     --gap-1: 0.25rem; /* 4px */
     --gap-2: 0.5rem; /* 8px */
+    --gap-3: 0.75rem; /* 12px */
     --gap-4: 1rem; /* 16px */
     --gap-6: 1.5rem; /* 24px */
     --gap-8: 2rem; /* 32px */
@@ -180,6 +181,28 @@
 /* Max-width utilities */
 .max-w-full {
     max-width: 100%;
+}
+
+/* Extra small devices and up (≥480px) */
+@media (min-width: 480px) {
+    .xs\:flex-row {
+        flex-direction: row;
+    }
+
+    .xs\:flex-col {
+        flex-direction: column;
+    }
+}
+
+/* Small devices and up (≥640px) */
+@media (min-width: 640px) {
+    .sm\:flex-row {
+        flex-direction: row;
+    }
+
+    .sm\:flex-col {
+        flex-direction: column;
+    }
 }
 
 /* Medium devices and up (≥768px) */

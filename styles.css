@@ -49,7 +49,7 @@ body {
     flex-direction: column;
     align-items: center;
     font-size: var(--text-base);
-    padding: 20px;
+    padding: 20px 12px;
     margin: 0;
     color: var(--elf-primary-color);
     background-color: var(--elf-background-color);
@@ -87,9 +87,9 @@ button {
     text-decoration: none;
     user-select: none;
 
-    width: 80px;
-    padding: 12px;
-    font-size: var(--text-base);
+    width: 70px;
+    padding: 10px 6px;
+    font-size: var(--text-sm);
 }
 
 button:hover {
@@ -193,7 +193,7 @@ input[type="file"]::file-selector-button {
 .qr-code-preview {
     display: flex;
     justify-content: center;
-    gap: var(--gap-4);
+    gap: var(--gap-3);
     max-width: 100%;
     position: sticky;
     top: 0;
@@ -206,10 +206,10 @@ input[type="file"]::file-selector-button {
 }
 
 .qr-code-container {
-    width: 200px;
+    width: 120px;
     max-width: 100%;
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 8px;
+    padding: 8px;
     background-color: var(--elf-accent-light-color);
 }
 
@@ -273,8 +273,33 @@ input[type="file"]::file-selector-button {
     margin-top: 16px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 375px) {
     .qr-code-container {
-        width: 300px;
+        width: 160px;
+        padding: 10px;
+    }
+}
+
+@media (min-width: 480px) {
+    .qr-code-container {
+        width: 200px;
+        padding: 12px;
+    }
+
+    button {
+        padding: 12px 8px;
+        width: 80px;
+        font-size: var(--text-base);
+    }
+
+    .qr-code-preview {
+        gap: calc(var(--gap-4));
+    }
+}
+
+@media (min-width: 640px) {
+    .qr-code-container {
+        width: 260px;
+        padding: 16px;
     }
 }

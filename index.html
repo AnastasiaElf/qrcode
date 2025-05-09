@@ -16,15 +16,15 @@
 
 <body>
     <div class="text-xl">QR Code Generator</div>
-    <div class="qr-code-preview flex-col md:flex-row">
-        <div class="flex flex-row md:flex-col gap-4 flex-wrap justify-center">
+    <div class="qr-code-preview flex-row">
+        <div class="flex flex-col gap-4 flex-wrap justify-center">
             <button onclick="downloadQR('svg')">SVG</button>
             <button onclick="downloadQR('png')">PNG</button>
         </div>
         <div class="max-w-full">
             <div class="qr-code-container" id="qrcode"></div>
         </div>
-        <div class="flex flex-row md:flex-col gap-4 flex-wrap justify-center">
+        <div class="flex flex-col gap-4 flex-wrap justify-center">
             <button onclick="downloadQR('jpeg')">JPEG</button>
             <button onclick="downloadQR('webp')">WEBP</button>
         </div>
