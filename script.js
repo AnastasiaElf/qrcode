@@ -53,6 +53,58 @@ const radioConfig = {
 
 let qrCode;
 
+function getUrlValue() {
+    return document.getElementById("input_url").value;
+}
+
+function getLogoTypeValue() {
+    return document.querySelector('input[name="input_logo_type"]:checked').value;
+}
+
+function getLogoTextValue() {
+    return document.getElementById("input_logo_text").value;
+}
+
+function getLogoImageValue() {
+    return document.getElementById("input_logo_image").files[0];
+}
+
+function getShapeValue() {
+    return document.querySelector('input[name="input_shape"]:checked').value;
+}
+
+function getDotStyleValue() {
+    return document.querySelector('input[name="input_dot_style"]:checked').value;
+}
+
+function getCornerSquareStyleValue() {
+    return document.querySelector('input[name="input_corner_square_shape"]:checked').value;
+}
+
+function getCornerDotStyleValue() {
+    return document.querySelector('input[name="input_corner_dot_shape"]:checked').value;
+}
+
+function getMarginValue() {
+    return parseInt(document.querySelector('input[name="input_margin"]:checked').value);
+}
+
+function getImageMarginValue() {
+    return parseInt(document.querySelector('input[name="input_logo_margin"]:checked').value);
+}
+
+function getErrorCorrectionLevelValue() {
+    return document.querySelector('input[name="input_error_correction"]:checked').value;
+}
+
+function getScaleValue() {
+    return parseInt(document.querySelector('input[name="input_scale"]:checked').value);
+}
+
+function getInputLogoTypeValue() {
+    return document.querySelector('input[name="input_logo_type"]:checked').value;
+}
+
 function downloadQR(extension) {
     if (!qrCode) return;
 
@@ -63,18 +115,18 @@ function downloadQR(extension) {
 }
 
 function updateQR() {
-    let url = document.getElementById("input_url").value;
-    const logoType = document.querySelector('input[name="input_logo_type"]:checked').value;
-    let logoText = document.getElementById("input_logo_text").value;
-    let logoImage = document.getElementById("input_logo_image").files[0];
-    const shape = document.querySelector('input[name="input_shape"]:checked').value;
-    const dotStyle = document.querySelector('input[name="input_dot_style"]:checked').value;
-    const cornerSquareStyle = document.querySelector('input[name="input_corner_square_shape"]:checked').value;
-    const cornerDotStyle = document.querySelector('input[name="input_corner_dot_shape"]:checked').value;
-    const margin = parseInt(document.querySelector('input[name="input_margin"]:checked').value);
-    const imageMargin = parseInt(document.querySelector('input[name="input_logo_margin"]:checked').value);
-    const errorCorrectionLevel = document.querySelector('input[name="input_error_correction"]:checked').value;
-    const scale = document.querySelector('input[name="input_scale"]:checked').value;
+    let url = getUrlValue();
+    const logoType = getLogoTypeValue();
+    let logoText = getLogoTextValue();
+    let logoImage = getLogoImageValue();
+    const shape = getShapeValue();
+    const dotStyle = getDotStyleValue();
+    const cornerSquareStyle = getCornerSquareStyleValue();
+    const cornerDotStyle = getCornerDotStyleValue();
+    const margin = getMarginValue();
+    const imageMargin = getImageMarginValue();
+    const errorCorrectionLevel = getErrorCorrectionLevelValue();
+    const scale = getScaleValue();
 
     if (!url) url = url_placeholder;
 
@@ -193,13 +245,13 @@ function updateLogoInputVisibility(selected) {
 }
 
 function handleLogoTypeChange() {
-    const selected = document.querySelector('input[name="input_logo_type"]:checked').value;
+    const selected = getInputLogoTypeValue();
     updateLogoInputVisibility(selected);
     updateQR();
 }
 
 function updateSVGStroke() {
-    const scale = document.querySelector('input[name="input_scale"]:checked').value;
+    const scale = getScaleValue();
     document.documentElement.style.setProperty("--elf-svg-stroke-width", `${stroke_step * scale}px`);
 }
 
