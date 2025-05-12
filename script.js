@@ -4,6 +4,7 @@ const logo_image_placeholder = "./images/logo_placeholder.png";
 const margin_step = 5;
 const logo_margin_step = 2;
 const stroke_step = 0.5;
+const imageSize = 0.4;
 
 const textConfig = {
     input_url: {
@@ -162,7 +163,7 @@ function updateQR() {
         image: logo,
         imageOptions: {
             margin: imageMargin * logo_margin_step,
-            imageSize: 0.5,
+            imageSize: imageSize,
         },
         qrOptions: {
             errorCorrectionLevel: errorCorrectionLevel,
@@ -387,7 +388,7 @@ function initQRCode() {
         image: logo,
         imageOptions: {
             margin: imageMargin * logo_margin_step,
-            imageSize: 0.5,
+            imageSize: imageSize,
         },
         qrOptions: {
             errorCorrectionLevel: errorCorrectionLevel,
