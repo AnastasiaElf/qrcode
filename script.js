@@ -369,6 +369,7 @@ function initQRCode() {
         shape: shape,
         margin: margin * margin_step,
         scale: scale,
+        strokeWidth: 0.5,
         mergePaths: false,
         backgroundOptions: {
             color: null,
